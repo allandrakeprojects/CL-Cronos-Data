@@ -82,6 +82,12 @@
             this.timer_start_button = new System.Windows.Forms.Timer(this.components);
             this.timer_elapsed = new System.Windows.Forms.Timer(this.components);
             this.timer_close_message_box = new System.Windows.Forms.Timer(this.components);
+            this.timer_flush_memory = new System.Windows.Forms.Timer(this.components);
+            this.timer_midnight = new System.Windows.Forms.Timer(this.components);
+            this.panel_loader = new System.Windows.Forms.Panel();
+            this.label_navigate_down = new System.Windows.Forms.Label();
+            this.label_brand = new System.Windows.Forms.Label();
+            this.pictureBox_loader_loader = new System.Windows.Forms.PictureBox();
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -92,6 +98,8 @@
             this.panel_filter.SuspendLayout();
             this.panel_footer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.panel_loader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_loader_loader)).BeginInit();
             this.SuspendLayout();
             // 
             // panel_header
@@ -389,6 +397,7 @@
             this.label_navigate_up.Name = "label_navigate_up";
             this.label_navigate_up.Size = new System.Drawing.Size(35, 23);
             this.label_navigate_up.TabIndex = 43;
+            this.label_navigate_up.Click += new System.EventHandler(this.label_navigate_up_Click);
             // 
             // panel_filter
             // 
@@ -677,12 +686,67 @@
             this.timer_close_message_box.Enabled = true;
             this.timer_close_message_box.Tick += new System.EventHandler(this.timer_close_message_box_Tick);
             // 
+            // timer_flush_memory
+            // 
+            this.timer_flush_memory.Enabled = true;
+            this.timer_flush_memory.Interval = 2000;
+            this.timer_flush_memory.Tick += new System.EventHandler(this.timer_flush_memory_Tick);
+            // 
+            // timer_midnight
+            // 
+            this.timer_midnight.Enabled = true;
+            this.timer_midnight.Interval = 10000;
+            this.timer_midnight.Tick += new System.EventHandler(this.timer_midnight_Tick);
+            // 
+            // panel_loader
+            // 
+            this.panel_loader.Controls.Add(this.label_navigate_down);
+            this.panel_loader.Controls.Add(this.label_brand);
+            this.panel_loader.Controls.Add(this.pictureBox_loader_loader);
+            this.panel_loader.Location = new System.Drawing.Point(-11, 47);
+            this.panel_loader.Name = "panel_loader";
+            this.panel_loader.Size = new System.Drawing.Size(600, 134);
+            this.panel_loader.TabIndex = 37;
+            this.panel_loader.Visible = false;
+            // 
+            // label_navigate_down
+            // 
+            this.label_navigate_down.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label_navigate_down.Image = global::CL_Cronos_Data.Properties.Resources.navigate_down;
+            this.label_navigate_down.Location = new System.Drawing.Point(331, 6);
+            this.label_navigate_down.Name = "label_navigate_down";
+            this.label_navigate_down.Size = new System.Drawing.Size(35, 23);
+            this.label_navigate_down.TabIndex = 42;
+            this.label_navigate_down.Click += new System.EventHandler(this.label_navigate_down_Click);
+            // 
+            // label_brand
+            // 
+            this.label_brand.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_brand.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(96)))), ((int)(((byte)(168)))));
+            this.label_brand.Location = new System.Drawing.Point(18, -6);
+            this.label_brand.Name = "label_brand";
+            this.label_brand.Size = new System.Drawing.Size(510, 46);
+            this.label_brand.TabIndex = 26;
+            this.label_brand.Text = "Chang Lee";
+            this.label_brand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox_loader_loader
+            // 
+            this.pictureBox_loader_loader.Image = global::CL_Cronos_Data.Properties.Resources.loader;
+            this.pictureBox_loader_loader.Location = new System.Drawing.Point(258, 32);
+            this.pictureBox_loader_loader.Name = "pictureBox_loader_loader";
+            this.pictureBox_loader_loader.Size = new System.Drawing.Size(60, 101);
+            this.pictureBox_loader_loader.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox_loader_loader.TabIndex = 41;
+            this.pictureBox_loader_loader.TabStop = false;
+            // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(569, 514);
+            this.Controls.Add(this.panel_loader);
             this.Controls.Add(this.button_start);
             this.Controls.Add(this.label_count);
             this.Controls.Add(this.button_stop);
@@ -713,6 +777,8 @@
             this.panel_footer.ResumeLayout(false);
             this.panel_footer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.panel_loader.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_loader_loader)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -771,5 +837,11 @@
         private System.Windows.Forms.Timer timer_elapsed;
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.Timer timer_close_message_box;
+        private System.Windows.Forms.Timer timer_flush_memory;
+        private System.Windows.Forms.Timer timer_midnight;
+        private System.Windows.Forms.Panel panel_loader;
+        private System.Windows.Forms.Label label_navigate_down;
+        private System.Windows.Forms.Label label_brand;
+        private System.Windows.Forms.PictureBox pictureBox_loader_loader;
     }
 }

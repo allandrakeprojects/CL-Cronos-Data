@@ -70,17 +70,5 @@ namespace CL_Cronos_Data.Properties {
                 this["______server_location"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ______bet_record {
-            get {
-                return ((int)(this["______bet_record"]));
-            }
-            set {
-                this["______bet_record"] = value;
-            }
-        }
     }
 }
