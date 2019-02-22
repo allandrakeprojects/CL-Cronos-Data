@@ -88,6 +88,8 @@
             this.label_navigate_down = new System.Windows.Forms.Label();
             this.label_brand = new System.Windows.Forms.Label();
             this.pictureBox_loader_loader = new System.Windows.Forms.PictureBox();
+            this.panel_landing = new System.Windows.Forms.Panel();
+            this.pictureBox_landing = new System.Windows.Forms.PictureBox();
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -100,6 +102,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel_loader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_loader_loader)).BeginInit();
+            this.panel_landing.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_landing)).BeginInit();
             this.SuspendLayout();
             // 
             // panel_header
@@ -740,6 +744,23 @@
             this.pictureBox_loader_loader.TabIndex = 41;
             this.pictureBox_loader_loader.TabStop = false;
             // 
+            // panel_landing
+            // 
+            this.panel_landing.Controls.Add(this.pictureBox_landing);
+            this.panel_landing.Location = new System.Drawing.Point(-1, 21);
+            this.panel_landing.Name = "panel_landing";
+            this.panel_landing.Size = new System.Drawing.Size(572, 472);
+            this.panel_landing.TabIndex = 38;
+            // 
+            // pictureBox_landing
+            // 
+            this.pictureBox_landing.Image = global::CL_Cronos_Data.Properties.Resources.cronos_data;
+            this.pictureBox_landing.Location = new System.Drawing.Point(226, 170);
+            this.pictureBox_landing.Name = "pictureBox_landing";
+            this.pictureBox_landing.Size = new System.Drawing.Size(135, 134);
+            this.pictureBox_landing.TabIndex = 0;
+            this.pictureBox_landing.TabStop = false;
+            // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -747,6 +768,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(569, 514);
             this.Controls.Add(this.panel_loader);
+            this.Controls.Add(this.panel_landing);
             this.Controls.Add(this.button_start);
             this.Controls.Add(this.label_count);
             this.Controls.Add(this.button_stop);
@@ -779,6 +801,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel_loader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_loader_loader)).EndInit();
+            this.panel_landing.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_landing)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -843,5 +867,7 @@
         private System.Windows.Forms.Label label_navigate_down;
         private System.Windows.Forms.Label label_brand;
         private System.Windows.Forms.PictureBox pictureBox_loader_loader;
+        private System.Windows.Forms.Panel panel_landing;
+        private System.Windows.Forms.PictureBox pictureBox_landing;
     }
 }

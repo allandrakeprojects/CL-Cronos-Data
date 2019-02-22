@@ -210,7 +210,7 @@ namespace CL_Cronos_Data
             if (dr == DialogResult.Yes)
             {
                 __is_close = false;
-                //Environment.Exit(0);
+                Environment.Exit(0);
             }
         }
 
@@ -231,7 +231,7 @@ namespace CL_Cronos_Data
             }
             __detect_navigate = true;
             // comment
-            //panel_landing.Visible = false;
+            panel_landing.Visible = false;
             label_title.Visible = true;
             panel.Visible = true;
             pictureBox_minimize.Visible = true;
@@ -367,9 +367,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                 }
             }
@@ -683,9 +683,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
                         
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -976,9 +976,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -1379,9 +1379,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -1688,9 +1688,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -2101,9 +2101,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -2367,9 +2367,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -2415,9 +2415,9 @@ namespace CL_Cronos_Data
                     {
                         // comment
                         //SendITSupport("There's a problem to the server, please re-open the application.");
-                        //SendMyBot(err.ToString());
+                        SendMyBot(err.ToString());
 
-                        //Environment.Exit(0);
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -2545,9 +2545,9 @@ namespace CL_Cronos_Data
                 {
                     // comment
                     //SendITSupport("There's a problem to the server, please re-open the application.");
-                    //SendMyBot(err.ToString());
+                    SendMyBot(err.ToString());
 
-                    //Environment.Exit(0);
+                    Environment.Exit(0);
                 }
                 else
                 {
@@ -2610,9 +2610,9 @@ namespace CL_Cronos_Data
                 {
                     // comment
                     //SendITSupport("There's a problem to the server, please re-open the application.");
-                    //SendMyBot(err.ToString());
+                    SendMyBot(err.ToString());
 
-                    //Environment.Exit(0);
+                    Environment.Exit(0);
                 }
                 else
                 {
@@ -2683,9 +2683,9 @@ namespace CL_Cronos_Data
                 {
                     // comment
                     //SendITSupport("There's a problem to the server, please re-open the application.");
-                    //SendMyBot(err.ToString());
+                    SendMyBot(err.ToString());
 
-                    //Environment.Exit(0);
+                    Environment.Exit(0);
                 }
                 else
                 {
@@ -2776,7 +2776,7 @@ namespace CL_Cronos_Data
                 {
                     MessageBox.Show(err.ToString());
 
-                    //Environment.Exit(0);
+                    Environment.Exit(0);
                 }
                 else
                 {
@@ -2818,7 +2818,7 @@ namespace CL_Cronos_Data
                 {
                     MessageBox.Show(err.ToString());
 
-                    //Environment.Exit(0);
+                    Environment.Exit(0);
                 }
                 else
                 {
