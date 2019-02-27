@@ -34,7 +34,6 @@ namespace CL_Cronos_Data
         private int __send = 0;
         private int __timer_count = 10;
         private int __page_size = 100000;
-        // edit this
         private int __index_reg = 1;
         private int __index_dep = 1;
         private int __index_bon = 1;
@@ -54,6 +53,7 @@ namespace CL_Cronos_Data
         List<String> __getdata_affiliatelist = new List<String>();
         List<String> __getdata_paymentmethodlist = new List<String>();
         List<String> __getdata_bonuscode = new List<String>();
+        List<String> __getdata_productcode = new List<String>();
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         Form __mainform_handler;
 
@@ -265,6 +265,7 @@ namespace CL_Cronos_Data
             ___GETDATA_AFFIALIATELIST();
             ___GETDATA_PAYMENTMETHODLIST();
             ___GETDATA_BONUSCODE();
+            ___GETDATA_PRODUCTCODE();
         }
 
         // WebBrowser
@@ -311,10 +312,10 @@ namespace CL_Cronos_Data
                             label_total_records.Visible = true;
                             button_start.Visible = true;
                             // comment
-                            //__mainform_handler = Application.OpenForms[0];
-                            //__mainform_handler.Size = new Size(569, 208);
-                            //panel_loader.Visible = true;
-                            //label_navigate_up.Enabled = false;
+                            __mainform_handler = Application.OpenForms[0];
+                            __mainform_handler.Size = new Size(569, 208);
+                            panel_loader.Visible = true;
+                            label_navigate_up.Enabled = false;
 
                             if (!__is_login)
                             {
@@ -599,7 +600,7 @@ namespace CL_Cronos_Data
                 try
                 {
                     label_count.Text = __timer_count--.ToString();
-                    if (label_count.Text == "-1")
+                    if (label_count.Text == "9")
                     {
                         label_status.Text = "Running";
                         panel_status.Visible = true;
@@ -2581,7 +2582,7 @@ namespace CL_Cronos_Data
                 JToken _jo_success = _jo.SelectToken("$.IsSuccess");
                 if (_jo_success.ToString() == "True")
                 {
-                    JToken _jo_path = _jo.SelectToken("$.FileVirtualPath").ToString().Replace("统计报表_", "Statistic Report");
+                    JToken _jo_path = _jo.SelectToken("$.FileVirtualPath").ToString();
                     string _current_datetime = DateTime.Now.ToString("yyyy-MM-dd");
                     if (!Directory.Exists(__file_location + "\\Cronos Data"))
                     {
@@ -2603,39 +2604,16 @@ namespace CL_Cronos_Data
                         Directory.CreateDirectory(__file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record");
                     }
 
-                    string _folder_path_result_xlsx = __file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record\\" + __brand_code + "_Turnover_" + _current_datetime + "_1.xlsx";
+                    string _folder_path_result_xlsx = __file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record\\" + __brand_code + "_TurnoverRecord_" + _current_datetime + "_1.xlsx";
 
                     if (File.Exists(_folder_path_result_xlsx))
                     {
-                        File.Delete(_folder_path_result_xlsx);
+                        File.Delete(_folder_path_result_xlsx); 
                     }
+
+                    await ___TURNOVER_DOWNLOADAync(__root_url + _jo_path + "?", _folder_path_result_xlsx, cookie);
                     
-                    await ___TURNOVER_PROCESSAsync(__root_url + _jo_path + "?", _folder_path_result_xlsx, cookie);
-
-                    // TURNOVER SAVING EXCEL
-
-                    Properties.Settings.Default.______start_detect = "5";
-                    Properties.Settings.Default.Save();
-
-                    panel_status.Visible = false;
-                    label_cl_status.Text = "-";
-                    label_page_count.Text = "-";
-                    label_total_records.Text = "-";
-                    button_start.Visible = true;
-                    __index_reg = 1;
-                    if (__is_autostart)
-                    {
-                        comboBox_list.SelectedIndex = 4;
-                        button_start.PerformClick();
-                    }
-                    else
-                    {
-                        panel_filter.Enabled = true;
-                    }
-
-                    __DATA.Clear();
-                    __detect_header = false;
-                    __send = 0;
+                    ___TURNOVER_PROCESSAsync(_folder_path_result_xlsx);
                 }
                 else
                 {
@@ -2722,11 +2700,14 @@ namespace CL_Cronos_Data
             }
         }
 
-        private async Task ___TURNOVER_PROCESSAsync(string path_from, string path_to, string cookie)
+        private async Task ___TURNOVER_DOWNLOADAync(string path_from, string path_to, string cookie)
         {
             WebClient wc = new WebClient();
+            wc.Headers.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729)");
+            wc.Headers.Add("Accept", "image/gif, image/jpeg, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*");
+            wc.Headers.Add("Accept-Language", "en-US,en;q=0.55");
             wc.Encoding = Encoding.UTF8;
-            wc.Headers.Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            //wc.Headers.Add("Content-Type", "image/gif, image/jpeg, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*");
             wc.Headers.Add("Cookie", cookie);
 
             await wc.DownloadFileTaskAsync(
@@ -2735,8 +2716,377 @@ namespace CL_Cronos_Data
             );
         }
 
-        // BET -----
+        private async void ___TURNOVER_PROCESSAsync(string path)
+        {
+            try
+            {
+                Excel.Application app_ = new Excel.Application();
+                Excel.Workbook workbook_ = app_.Workbooks.Open(path);
+                Excel._Worksheet worksheet_ = workbook_.Sheets[2];
+                Excel.Range range_ = worksheet_.UsedRange;
 
+                int rowCount = range_.Rows.Count;
+                int colCount = range_.Columns.Count;
+
+                __DATA.Clear();
+                label_page_count.Text = "1 of 1";
+                label_cl_status.Text = "status: getting data... --- TURNOVER RECORD";
+
+                for (int i = 1; i <= rowCount; i++)
+                {
+                    if (i != 1)
+                    {
+                        Application.DoEvents();
+
+                        int count_ = 0;
+                        string _member = "";
+                        string _product = "";
+                        string _bet_count = "";
+                        string _stake = "";
+                        string _stake_ex_draw = "";
+                        string _company_wl = "";
+                        string _provider = "";
+                        string _category = "";
+                        string _vip = "";
+                        string _date = DateTime.Now.AddDays(-1).ToString("MM/dd/yyyy");
+                        string _month = DateTime.Now.AddDays(-1).ToString("MMM-dd");
+                        string _reg_month = "";
+                        string _fd_date = "";
+                        string _ld_date = "";
+                        char[] split = "*|*".ToCharArray();
+                        
+                        __display_count++;
+                        label_total_records.Text = __display_count.ToString("N0");
+
+                        for (int j = 1; j <= colCount; j++)
+                        {
+                            count_++;
+                            if (count_ == 5)
+                            {
+                                _member = range_.Cells[i, j].Value2.ToString();
+                                // Datails
+                                string _details = await ___TURNOVER_VIP_REGMONTHAsync(_member);
+                                string[] _details_replace = _details.Split('|');
+                                int _count_details = 0;
+                                foreach (string _detail in _details_replace)
+                                {
+                                    _count_details++;
+
+                                    if (_count_details == 1)
+                                    {
+                                        _vip = _detail;
+                                    }
+                                    else if (_count_details == 2)
+                                    {
+                                        _reg_month = _detail;
+                                    }
+                                }
+
+                                // FD LD Date
+                                string _fd_ld_date = await ___REGISTRATION_FIRSTLASTDEPOSITAsync(_member.ToString());
+                                string[] _fd_ld_date_replace = _fd_ld_date.Split('|');
+                                int _count_fd_ld = 0;
+                                foreach (string _detail in _fd_ld_date_replace)
+                                {
+                                    _count_fd_ld++;
+
+                                    if (_count_fd_ld == 1)
+                                    {
+                                        _fd_date = _detail;
+                                    }
+                                    else if (_count_fd_ld == 2)
+                                    {
+                                        _ld_date = _detail;
+                                    }
+                                }
+                            }
+                            else if (count_ == 6)
+                            {
+                                _product = range_.Cells[i, j].Value2.ToString();
+                                for (int i_p = 0; i_p < __getdata_productcode.Count; i_p++)
+                                {
+                                    string[] results = __getdata_productcode[i_p].Split(split);
+                                    if (results[0].Trim() == _product)
+                                    {
+                                        _provider = results[3].Trim();
+                                        _category = results[6].Trim();
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (count_ == 7)
+                            {
+                                _bet_count = range_.Cells[i, j].Value2.ToString();
+                            }
+                            else if (count_ == 8)
+                            {
+                                _stake = range_.Cells[i, j].Value2.ToString();
+                            }
+                            else if (count_ == 9)
+                            {
+                                _stake_ex_draw = range_.Cells[i, j].Value2.ToString();
+                            }
+                            else if (count_ == 10)
+                            {
+                                _company_wl = range_.Cells[i, j].Value2.ToString();
+                            }
+                        }
+
+                        // ----- Retained
+                        string _retained = "";
+                        string _month_ = DateTime.Now.Month.ToString();
+                        string _year_ = DateTime.Now.Year.ToString();
+                        string _year_month = _year_ + "-" + _month_;
+                        if (_fd_date != "" && _ld_date != "")
+                        {
+                            DateTime _fd_date_ = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                            DateTime _ld_date_ = DateTime.ParseExact(_ld_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+
+                            var _last2months = DateTime.Today.AddMonths(-2);
+                            DateTime _last2months_ = DateTime.ParseExact(_last2months.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            if (_ld_date_ >= _last2months_)
+                            {
+                                _retained = "Yes";
+                            }
+                            else
+                            {
+                                _retained = "No";
+                            }
+                        }
+                        else
+                        {
+                            _retained = "No";
+                        }
+                        // ----- New Based on Reg && Reg Month
+                        string _new_based_on_reg = "";
+                        if (_reg_month != "")
+                        {
+                            DateTime _reg_month_replace_ = DateTime.ParseExact(_reg_month, "dd-MMM-y", CultureInfo.InvariantCulture);
+                            if (_reg_month_replace_.ToString("yyyy-MM") == _year_month)
+                            {
+                                _new_based_on_reg = "Yes";
+                            }
+                            else
+                            {
+                                _new_based_on_reg = "No";
+                            }
+                        }
+                        else
+                        {
+                            _new_based_on_reg = "No";
+                            _reg_month = "";
+                        }
+                        // ----- New Based on Dep
+                        // ----- Real Player
+                        string _real_player = "";
+                        string _new_based_on_dep = "";
+                        if (_fd_date != "")
+                        {
+                            DateTime _first_deposit = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                            if (_first_deposit.ToString("yyyy-MM") == _year_month)
+                            {
+                                _new_based_on_dep = "Yes";
+                            }
+                            else
+                            {
+                                _new_based_on_dep = "No";
+                            }
+
+                            _real_player = "Yes";
+                        }
+                        else
+                        {
+                            _new_based_on_dep = "No";
+                            _real_player = "No";
+                        }
+
+                        if (__display_count == 1)
+                        {
+                            var header = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}", "Brand", "Provider", "Category", "Month", "Date", "Member", "Currency", "Stake", "Stake Ex. Draw", "Bet Count", "Company Win Loss", "VIP", "Retained", "Reg Month", "First Dep Month", "New Based on Reg", "New Based on Dep", "Real Player");
+                            __DATA.AppendLine(header);
+                        }
+                        var data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}", __brand_code, "\"" + _provider + "\"", "\"" + _category + "\"", "\"" + _month + "\"", "\"" + _date + "\"", "\"" + _member + "\"", "\"" + "CNY" + "\"", "\"" + _stake + "\"", "\"" + _stake_ex_draw + "\"", "\"" + _bet_count + "\"", "\"" + _company_wl + "\"", "\"" + _vip + "\"", "\"" + _retained + "\"", "\"" + _reg_month + "\"", "\"" + _fd_date + "\"", "\"" + _new_based_on_reg + "\"", "\"" + _new_based_on_dep + "\"", "\"" + _real_player + "\"");
+                        __DATA.AppendLine(data);
+                    }
+                }
+
+                workbook_.Close();
+                app_.Quit();
+                Marshal.ReleaseComObject(app_);
+
+                // TURNOVER SAVING EXCEL
+                string _current_datetime = DateTime.Now.ToString("yyyy-MM-dd");
+                if (!Directory.Exists(__file_location + "\\Cronos Data"))
+                {
+                    Directory.CreateDirectory(__file_location + "\\Cronos Data");
+                }
+
+                if (!Directory.Exists(__file_location + "\\Cronos Data\\" + __brand_code))
+                {
+                    Directory.CreateDirectory(__file_location + "\\Cronos Data\\" + __brand_code);
+                }
+
+                if (!Directory.Exists(__file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime))
+                {
+                    Directory.CreateDirectory(__file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime);
+                }
+
+                if (!Directory.Exists(__file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record"))
+                {
+                    Directory.CreateDirectory(__file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record");
+                }
+
+                string _folder_path_result = __file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record\\" + __brand_code + "_TurnoverRecord_" + _current_datetime + "_1.txt";
+                string _folder_path_result_xlsx = __file_location + "\\Cronos Data\\" + __brand_code + "\\" + _current_datetime + "\\Turnover Record\\" + __brand_code + "_TurnoverRecord_" + _current_datetime + "_1.xlsx";
+
+                if (File.Exists(_folder_path_result))
+                {
+                    File.Delete(_folder_path_result);
+                }
+
+                if (File.Exists(_folder_path_result_xlsx))
+                {
+                    File.Delete(_folder_path_result_xlsx);
+                }
+
+                File.WriteAllText(_folder_path_result, __DATA.ToString(), Encoding.UTF8);
+
+                Excel.Application app = new Excel.Application();
+                Excel.Workbook wb = app.Workbooks.Open(_folder_path_result, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                Excel.Worksheet worksheet = wb.ActiveSheet;
+                worksheet.Activate();
+                worksheet.Application.ActiveWindow.SplitRow = 1;
+                worksheet.Application.ActiveWindow.FreezePanes = true;
+                Excel.Range firstRow = (Excel.Range)worksheet.Rows[1];
+                firstRow.AutoFilter(1,
+                                    Type.Missing,
+                                    Excel.XlAutoFilterOperator.xlAnd,
+                                    Type.Missing,
+                                    true);
+                worksheet.Columns[4].NumberFormat = "MMM-dd";
+                worksheet.Columns[14].NumberFormat = "dd-MMM-y";
+                worksheet.Columns[15].NumberFormat = "dd-MMM-y";
+                Excel.Range usedRange = worksheet.UsedRange;
+                Excel.Range rows = usedRange.Rows;
+                int count = 0;
+                foreach (Excel.Range row in rows)
+                {
+                    if (count == 0)
+                    {
+                        Excel.Range firstCell = row.Cells[1];
+
+                        string firstCellValue = firstCell.Value as string;
+
+                        if (!string.IsNullOrEmpty(firstCellValue))
+                        {
+                            row.Interior.Color = Color.FromArgb(27, 96, 168);
+                            row.Font.Color = Color.FromArgb(255, 255, 255);
+                        }
+
+                        break;
+                    }
+
+                    count++;
+                }
+                int i_;
+                for (i_ = 1; i_ <= 21; i_++)
+                {
+                    worksheet.Columns[i_].ColumnWidth = 20;
+                }
+                wb.SaveAs(_folder_path_result_xlsx, Excel.XlFileFormat.xlOpenXMLWorkbook, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                wb.Close();
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+
+                if (File.Exists(_folder_path_result))
+                {
+                    File.Delete(_folder_path_result);
+                }
+
+                // TURNOVER SEND TO DATABASE
+                // AUTO START
+
+                Properties.Settings.Default.______start_detect = "5";
+                Properties.Settings.Default.Save();
+
+                panel_status.Visible = false;
+                label_cl_status.Text = "-";
+                label_page_count.Text = "-";
+                label_total_records.Text = "-";
+                button_start.Visible = true;
+                __index_reg = 1;
+                if (__is_autostart)
+                {
+                    comboBox_list.SelectedIndex = 4;
+                    button_start.PerformClick();
+                }
+                else
+                {
+                    panel_filter.Enabled = true;
+                }
+
+                __DATA.Clear();
+                __detect_header = false;
+                __display_count = 0;
+                __send = 0;
+            }
+            catch (Exception err)
+            {
+                ___WaitNSeconds(5);
+                __DATA.Clear();
+                __display_count = 0;
+                ___TURNOVER_PROCESSAsync(path);
+            }
+        }
+
+        private async Task<string> ___TURNOVER_VIP_REGMONTHAsync(string username)
+        {
+            var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+            WebClient wc = new WebClient();
+
+            wc.Headers.Add("Cookie", cookie);
+            wc.Encoding = Encoding.UTF8;
+            wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+            wc.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+            var reqparm = new NameValueCollection
+            {
+                {"Account", username},
+                {"connectionId", __conn_id.ToString()},
+            };
+
+            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpk456.com/Member/Search", "POST", reqparm);
+            string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
+            var deserialize_object = JsonConvert.DeserializeObject(responsebody);
+            JObject _jo = JObject.Parse(deserialize_object.ToString());
+            // ----- VIP
+            JToken _vip = _jo.SelectToken("$.PageData[0].MemberLevelSettingName").ToString();
+            char[] split = "*|*".ToCharArray();
+            for (int i_v = 0; i_v < __getdata_viplist.Count; i_v++)
+            {
+                string[] results = __getdata_viplist[i_v].Split(split);
+                if (results[0].Trim() == _vip.ToString())
+                {
+                    _vip = results[3].Trim();
+                    break;
+                }
+            }
+            if (_vip.ToString() == "")
+            {
+                // notify
+                _vip = "";
+            }
+            // ----- Registration Time
+            JToken _reg_month = _jo.SelectToken("$.PageData[0].JoinTime").ToString();
+            _reg_month = _reg_month.ToString().Replace("/TestDate(", "");
+            _reg_month = _reg_month.ToString().Replace(")/", "");
+            DateTime _date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_reg_month.ToString()) / 1000d)).ToLocalTime();
+            _reg_month = _date_replace.ToString("dd-MMM-y");
+            
+            return _vip + "|" + _reg_month;
+        }
+        
+        // BET -----
         private async Task ___BETAsync(int index)
         {
             try
@@ -2982,47 +3332,6 @@ namespace CL_Cronos_Data
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         private void ___GETDATA_VIPLIST()
         {
@@ -3272,6 +3581,74 @@ namespace CL_Cronos_Data
                         }
                     }
 
+                    conn.Close();
+                }
+            }
+            catch (Exception err)
+            {
+                __send++;
+                if (__send == 5)
+                {
+                    // comment
+                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendMyBot(err.ToString());
+
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    ___WaitNSeconds(10);
+                    ___GETDATA_BONUSCODE();
+                }
+            }
+        }
+
+        private void ___GETDATA_PRODUCTCODE()
+        {
+            try
+            {
+                string connection = "Data Source=192.168.10.252;User ID=sa;password=Test@123;Initial Catalog=testrain;Integrated Security=True;Trusted_Connection=false;";
+
+                using (SqlConnection conn = new SqlConnection(connection))
+                {
+                    conn.Open();
+                    SqlCommand command = new SqlCommand("SELECT * FROM [testrain].[dbo].[" + __brand_code + ".Product Code]", conn);
+                    SqlCommand command_count = new SqlCommand("SELECT COUNT(*) FROM [testrain].[dbo].[" + __brand_code + ".Product Code]", conn);
+                    string columns = "";
+
+                    Int32 getcount = (Int32)command_count.ExecuteScalar();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        int count = 0;
+                        while (reader.Read())
+                        {
+                            count++;
+                            label_getdatacount.Text = "Product Code: " + count.ToString("N0") + " of " + getcount.ToString("N0");
+
+                            Application.DoEvents();
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                Application.DoEvents();
+                                if (i == 0)
+                                {
+                                    columns += reader[i].ToString() + "*|*";
+                                }
+                                else if (i == 1)
+                                {
+                                    columns += reader[i].ToString() + "*|*";
+                                }
+                                else if (i == 2)
+                                {
+                                    columns += reader[i].ToString();
+                                }
+                            }
+
+                            __getdata_productcode.Add(columns);
+                            columns = "";
+                        }
+                    }
+
                     panel_cl.Enabled = true;
                     label_getdatacount.Visible = false;
                     label_getdatacount.Text = "-";
@@ -3293,7 +3670,7 @@ namespace CL_Cronos_Data
                 else
                 {
                     ___WaitNSeconds(10);
-                    ___GETDATA_BONUSCODE();
+                    ___GETDATA_PRODUCTCODE();
                 }
             }
         }
@@ -3492,6 +3869,8 @@ namespace CL_Cronos_Data
                         Properties.Settings.Default.______midnight_time = "";
                         Properties.Settings.Default.Save();
 
+                        __DATA.Clear();
+                            __conn_id = "";
                         __index_reg = 1;
                         __index_dep = 1;
                         __index_bon = 1;
@@ -3500,11 +3879,14 @@ namespace CL_Cronos_Data
                         __getdata_viplist.Clear();
                         __getdata_affiliatelist.Clear();
                         __getdata_paymentmethodlist.Clear();
+                        __getdata_bonuscode.Clear();
+                        __getdata_productcode.Clear();
                         __DATA.Clear();
                         ___GETDATA_VIPLIST();
                         ___GETDATA_AFFIALIATELIST();
                         ___GETDATA_PAYMENTMETHODLIST();
                         ___GETDATA_BONUSCODE();
+                        ___GETDATA_PRODUCTCODE();
                         Properties.Settings.Default.______start_detect = "1";
                         Properties.Settings.Default.Save();
                         comboBox_list.SelectedIndex = 1;
@@ -3528,6 +3910,8 @@ namespace CL_Cronos_Data
                             Properties.Settings.Default.______midnight_time = "";
                             Properties.Settings.Default.Save();
 
+                            __DATA.Clear();
+                            __conn_id = "";
                             __index_reg = 1;
                             __index_dep = 1;
                             __index_bon = 1;
@@ -3536,11 +3920,14 @@ namespace CL_Cronos_Data
                             __getdata_viplist.Clear();
                             __getdata_affiliatelist.Clear();
                             __getdata_paymentmethodlist.Clear();
+                            __getdata_bonuscode.Clear();
+                            __getdata_productcode.Clear();
                             __DATA.Clear();
                             ___GETDATA_VIPLIST();
                             ___GETDATA_AFFIALIATELIST();
                             ___GETDATA_PAYMENTMETHODLIST();
                             ___GETDATA_BONUSCODE();
+                            ___GETDATA_PRODUCTCODE();
                             Properties.Settings.Default.______start_detect = "1";
                             Properties.Settings.Default.Save();
                             comboBox_list.SelectedIndex = 1;
