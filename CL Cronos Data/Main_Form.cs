@@ -325,40 +325,51 @@ namespace CL_Cronos_Data
                             }
 
                             if (!__is_start)
-                            {
+                            {                                
                                 if (Properties.Settings.Default.______start_detect == "0")
                                 {
+                                    label_status.Text = "Waiting";
+                                    
                                     button_start.Enabled = false;
                                     panel_filter.Enabled = false;
-                                    label_status.Text = "Waiting";
                                 }
                                 // registration
                                 else if (Properties.Settings.Default.______start_detect == "1")
                                 {
+                                    label_status.Text = "Running";
+
                                     comboBox_list.SelectedIndex = 0;
                                     button_start.PerformClick();
                                 }
                                 // payment
                                 else if (Properties.Settings.Default.______start_detect == "2")
                                 {
+                                    label_status.Text = "Running";
+
                                     comboBox_list.SelectedIndex = 1;
                                     button_start.PerformClick();
                                 }
                                 // bonus
                                 else if (Properties.Settings.Default.______start_detect == "3")
                                 {
+                                    label_status.Text = "Running";
+
                                     comboBox_list.SelectedIndex = 2;
                                     button_start.PerformClick();
                                 }
                                 // turnover
                                 else if (Properties.Settings.Default.______start_detect == "4")
                                 {
+                                    label_status.Text = "Running";
+
                                     comboBox_list.SelectedIndex = 3;
                                     button_start.PerformClick();
                                 }
                                 // bet
                                 else if (Properties.Settings.Default.______start_detect == "5")
                                 {
+                                    label_status.Text = "Running";
+
                                     comboBox_list.SelectedIndex = 4;
                                     button_start.PerformClick();
                                 }
@@ -600,7 +611,7 @@ namespace CL_Cronos_Data
                 try
                 {
                     label_count.Text = __timer_count--.ToString();
-                    if (label_count.Text == "9")
+                    if (label_count.Text == "-1")
                     {
                         label_status.Text = "Running";
                         panel_status.Visible = true;
@@ -644,6 +655,7 @@ namespace CL_Cronos_Data
                         {
                             // Bet Record Record
                             label_cl_status.Text = "status: doing calculation... --- BET RECORD";
+                            await ___BET_UNPAYAsync(0);
                             await ___BETAsync(0);
                         }
                     }
@@ -1083,18 +1095,18 @@ namespace CL_Cronos_Data
             string _month = "";
             if (_jo_count.Count() > 0)
             {
-                _ld_date = _jo.SelectToken("$.PageData[0].Time").ToString();
-                _ld_date = _ld_date.ToString().Replace("/TestDate(", "");
-                _ld_date = _ld_date.ToString().Replace(")/", "");
-                DateTime _ld_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_ld_date.ToString()) / 1000d)).ToLocalTime();
-                _ld_date = _ld_date_replace.ToString("MM/dd/yyyy");
-                
                 _fd_date = _jo.SelectToken("$.PageData[" + (_jo_count.Count()-1) + "].Time").ToString();
                 _fd_date = _fd_date.ToString().Replace("/TestDate(", "");
                 _fd_date = _fd_date.ToString().Replace(")/", "");
                 DateTime _fd_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_fd_date.ToString()) / 1000d)).ToLocalTime();
                 _fd_date = _fd_date_replace.ToString("MM/dd/yyyy");
                 _month = _fd_date_replace.ToString("MM/1/yyyy");
+                
+                _ld_date = _jo.SelectToken("$.PageData[0].Time").ToString();
+                _ld_date = _ld_date.ToString().Replace("/TestDate(", "");
+                _ld_date = _ld_date.ToString().Replace(")/", "");
+                DateTime _ld_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_ld_date.ToString()) / 1000d)).ToLocalTime();
+                _ld_date = _ld_date_replace.ToString("MM/dd/yyyy");
             }
             
             return _fd_date + "|" + _ld_date + "|" + _month;
@@ -1310,51 +1322,31 @@ namespace CL_Cronos_Data
                             _fd_date_month = _detail;
                         }
                     }
-                    // ----- New
+                    // ----- Retained && New && Reactivated
                     string _new = "";
                     string _retained = "";
                     string _reactivated = "";
                     if (_status.ToString() == "Success" && !_username.ToString().ToLower().Contains("test"))
                     {
-                        if (_fd_date != "" && _ld_date != "")
+                        string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
+                        string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+                        if (_fd_date == _current_month)
                         {
-                            DateTime _fd_date_ = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                            DateTime _ld_date_ = DateTime.ParseExact(_ld_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-
-                            var _last2months = DateTime.Today.AddMonths(-2);
-                            DateTime _last2months_ = DateTime.ParseExact(_last2months.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                            if (_ld_date_ >= _last2months_)
-                            {
-                                _retained = "Retained";
-                            }
-                            else
-                            {
-                                _retained = "Not Retained";
-                            }
-
-                            string _month_ = DateTime.Now.Month.ToString();
-                            string _year_ = DateTime.Now.Year.ToString();
-                            string _year_month = _year_ + "-" + _month_;
-
-                            // new
-                            if (_fd_date_.ToString("yyyy-MM") == _year_month)
-                            {
-                                _new = "New";
-                            }
-                            else
-                            {
-                                _new = "Not New";
-                            }
-
-                            // reactivated
-                            if (_retained == "Not Retained" && _new == "Not New")
-                            {
-                                _reactivated = "Reactivated";
-                            }
-                            else
-                            {
-                                _reactivated = "Not Reactivated";
-                            }
+                            _retained = "Not Retained";
+                            _new = "New";
+                            _reactivated = "Not Reactivated";
+                        }
+                        else if (_ld_date == _last_month)
+                        {
+                            _retained = "Not Retained";
+                            _new = "New";
+                            _reactivated = "Not Reactivated";
+                        }
+                        else
+                        {
+                            _retained = "Not Retained";
+                            _new = "Not New";
+                            _reactivated = "Reactivated";
                         }
                     }
                     else
@@ -2839,18 +2831,19 @@ namespace CL_Cronos_Data
                         string _year_month = _year_ + "-" + _month_;
                         if (_fd_date != "" && _ld_date != "")
                         {
-                            DateTime _fd_date_ = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                            DateTime _ld_date_ = DateTime.ParseExact(_ld_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-
-                            var _last2months = DateTime.Today.AddMonths(-2);
-                            DateTime _last2months_ = DateTime.ParseExact(_last2months.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                            if (_ld_date_ >= _last2months_)
+                            string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
+                            string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+                            if (_fd_date == _current_month)
                             {
-                                _retained = "Yes";
+                                _retained = "Not Retained";
+                            }
+                            else if (_ld_date == _last_month)
+                            {
+                                _retained = "Not Retained";
                             }
                             else
                             {
-                                _retained = "No";
+                                _retained = "Not Retained";
                             }
                         }
                         else
@@ -3328,6 +3321,103 @@ namespace CL_Cronos_Data
                     {
                         ___WaitNSeconds(10);
                         await ___BETAsync(__index_bet);
+                    }
+                }
+            }
+        }
+
+        List<String> __username_detect = new List<String>();
+        private int __index_bet_unpay = 1;
+        private string __get_username = "";
+        private async Task ___BET_UNPAYAsync(int index)
+        {
+            try
+            {
+                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                WebClient wc = new WebClient();
+
+                wc.Headers.Add("Cookie", cookie);
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers[HttpRequestHeader.ContentType] = "application/json";
+                wc.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+                string start = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
+                DateTime datetime_start = DateTime.ParseExact(start, "yyyy-MM-dd 00:00:00", CultureInfo.InvariantCulture);
+                start = datetime_start.ToString("yyyy/MM/dd 00:00:00");
+
+                string end = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
+                DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
+
+                //string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"UnpayOnly\":\"True\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + __index_bet_unpay + "\"}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"2019/03/01 00:00:00\",\"UnpayOnly\":\"True\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + index + "\"}");
+                var deserialize_object = JsonConvert.DeserializeObject(responsebody);
+                JObject _jo = JObject.Parse(deserialize_object.ToString());
+                JToken _jo_count = _jo.SelectToken("$.PageData");
+                
+                if (_jo_count.Count() > 0)
+                {
+                    for (int i = 0; i < _jo_count.Count(); i++)
+                    {
+                        Application.DoEvents();
+
+                        JToken _username = _jo.SelectToken("$.PageData[" + i + "].Account");
+                        
+                        if (__username_detect.Count > 0)
+                        {
+                            bool _detect = false;
+                            foreach (string username in __username_detect) // Loop through List with foreach
+                            {
+                                if (_username.ToString() == username)
+                                {
+                                    _detect = true;
+                                }
+                            }
+
+                            if (!_detect)
+                            {
+                                __username_detect.Add(_username.ToString());
+                                __get_username += _username.ToString() + "\n";
+                            }
+                        }
+                        else
+                        {
+                            __username_detect.Add(_username.ToString());
+                            __get_username += _username.ToString() + "\n";
+                        }
+                    }
+
+                    await ___BET_UNPAYAsync(__index_bet_unpay++);
+                }
+                else
+                {
+                    if (__get_username != "")
+                    {
+                        SendReportsTeam("List Unpay Player(s) >>>\n" + __get_username);
+
+                        __username_detect.Clear();
+                        __index_bet_unpay = 1;
+                        __get_username = "";
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                if (__is_login)
+                {
+                    __send++;
+                    if (__send == 5)
+                    {
+                        // comment
+                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendMyBot(err.ToString());
+
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        ___WaitNSeconds(10);
+                        await ___BET_UNPAYAsync(__index_bet_unpay);
                     }
                 }
             }
