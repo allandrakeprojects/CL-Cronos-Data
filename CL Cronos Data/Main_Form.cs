@@ -3684,7 +3684,7 @@ namespace CL_Cronos_Data
                 string apiToken = "772918363:AAHn2ufmP3ocLEilQ1V-IHcqYMcSuFJHx5g";
                 string chatId = "@allandrake";
                 string text = "-----" + __brand_code + " " + __app + "-----%0A%0AIP:%20" + Properties.Settings.Default.______server_ip + "%0ALocation:%20" + Properties.Settings.Default.______server_location + "%0ADate%20and%20Time:%20[" + datetime + "]%0AMessage:%20" + message + "";
-                urlString = string.Format(urlString, apiToken, chatId, text);
+                urlString = String.Format(urlString, apiToken, chatId, text);
                 WebRequest request = WebRequest.Create(urlString);
                 Stream rs = request.GetResponse().GetResponseStream();
                 StreamReader reader = new StreamReader(rs);
@@ -3696,23 +3696,48 @@ namespace CL_Cronos_Data
                     if (line != null)
                         sb.Append(line);
                 }
-
-                __send = 0;
             }
             catch (Exception err)
             {
-                __send++;
-                if (__send == 5)
+                if (err.ToString().ToLower().Contains("hexadecimal"))
                 {
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
-                    SendMyBot(err.ToString());
+                    string datetime = DateTime.Now.ToString("dd MMM HH:mm:ss");
+                    string urlString = "https://api.telegram.org/bot{0}/sendMessage?chat_id={1}&text={2}";
+                    string apiToken = "772918363:AAHn2ufmP3ocLEilQ1V-IHcqYMcSuFJHx5g";
+                    string chatId = "@allandrake";
+                    string text = "-----" + __brand_code + " " + __app + "-----%0A%0AIP:%20192.168.10.60%0ALocation:%20192.168.10.60%0ADate%20and%20Time:%20[" + datetime + "]%0AMessage:%20" + message + "";
+                    urlString = String.Format(urlString, apiToken, chatId, text);
+                    WebRequest request = WebRequest.Create(urlString);
+                    Stream rs = request.GetResponse().GetResponseStream();
+                    StreamReader reader = new StreamReader(rs);
+                    string line = "";
+                    StringBuilder sb = new StringBuilder();
+                    while (line != null)
+                    {
+                        line = reader.ReadLine();
+                        if (line != null)
+                            sb.Append(line);
+                    }
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
                 {
-                    ___WaitNSeconds(10);
-                    SendMyBot(message);
+                    __send++;
+                    if (__send == 5)
+                    {
+                        SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendMyBot(err.ToString());
+
+                        __is_close = false;
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        ___WaitNSeconds(10);
+                        SendMyBot(message);
+                    }
                 }
             }
         }
@@ -3728,7 +3753,7 @@ namespace CL_Cronos_Data
                     string apiToken = "612187347:AAE9doWWcStpWrDrfpOod89qGSxCJ5JwQO4";
                     string chatId = "@it_support_ssi";
                     string text = "-----" + __brand_code + " " + __app + "-----%0A%0AIP:%20" + Properties.Settings.Default.______server_ip + "%0ALocation:%20" + Properties.Settings.Default.______server_location + "%0ADate%20and%20Time:%20[" + datetime + "]%0AMessage:%20" + message + "";
-                    urlString = string.Format(urlString, apiToken, chatId, text);
+                    urlString = String.Format(urlString, apiToken, chatId, text);
                     WebRequest request = WebRequest.Create(urlString);
                     Stream rs = request.GetResponse().GetResponseStream();
                     StreamReader reader = new StreamReader(rs);
@@ -3742,23 +3767,50 @@ namespace CL_Cronos_Data
                             sb.Append(line);
                         }
                     }
-
-                    __send = 0;
                 }
                 catch (Exception err)
                 {
-                    __send++;
-                    if (__send == 5)
+                    if (err.ToString().ToLower().Contains("hexadecimal"))
                     {
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
-                        SendMyBot(err.ToString());
+                        string datetime = DateTime.Now.ToString("dd MMM HH:mm:ss");
+                        string urlString = "https://api.telegram.org/bot{0}/sendMessage?chat_id={1}&text={2}";
+                        string apiToken = "612187347:AAE9doWWcStpWrDrfpOod89qGSxCJ5JwQO4";
+                        string chatId = "@it_support_ssi";
+                        string text = "-----" + __brand_code + " " + __app + "-----%0A%0AIP:%20192.168.10.60%0ALocation:%20192.168.10.60%0ADate%20and%20Time:%20[" + datetime + "]%0AMessage:%20" + message + "";
+                        urlString = String.Format(urlString, apiToken, chatId, text);
+                        WebRequest request = WebRequest.Create(urlString);
+                        Stream rs = request.GetResponse().GetResponseStream();
+                        StreamReader reader = new StreamReader(rs);
+                        string line = "";
+                        StringBuilder sb = new StringBuilder();
+                        while (line != null)
+                        {
+                            line = reader.ReadLine();
+                            if (line != null)
+                            {
+                                sb.Append(line);
+                            }
+                        }
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
                     {
-                        ___WaitNSeconds(10);
-                        SendITSupport(message);
+                        __send++;
+                        if (__send == 5)
+                        {
+                            SendITSupport("There's a problem to the server, please re-open the application.");
+                            SendMyBot(err.ToString());
+
+                            __is_close = false;
+                            Environment.Exit(0);
+                        }
+                        else
+                        {
+                            ___WaitNSeconds(10);
+                            SendITSupport(message);
+                        }
                     }
                 }
             }
