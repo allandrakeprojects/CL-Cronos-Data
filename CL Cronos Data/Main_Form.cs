@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CefSharp;
+using CefSharp.WinForms;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -22,7 +24,7 @@ namespace CL_Cronos_Data
 {
     public partial class Main_Form : Form
     {
-        private string __root_url = "http://sn.gk001.gpk456.com";
+        private string __root_url = "http://sn.gk001.gpkbk456.com";
         private string __url = "";
         private string __start_datetime_elapsed;
         private string __file_location = "\\\\192.168.10.22\\ssi-reporting";
@@ -48,6 +50,7 @@ namespace CL_Cronos_Data
         private JObject __jo;
         private JToken __jo_count;
         private JToken __conn_id = "";
+        private ChromiumWebBrowser chromeBrowser;
         StringBuilder __DATA = new StringBuilder();
         List<String> __getdata_viplist = new List<String>();
         List<String> __getdata_affiliatelist = new List<String>();
@@ -229,10 +232,11 @@ namespace CL_Cronos_Data
         private bool __detect_navigate = false;
         private void timer_landing_Tick(object sender, EventArgs e)
         {
-            if (!__detect_navigate)
+            if (!Cef.IsInitialized)
             {
-                webBrowser.Navigate(__root_url + "/Account/Login");
+                InitializeChromium();
             }
+            
             __detect_navigate = true;
             // comment
             panel_landing.Visible = false;
@@ -268,129 +272,269 @@ namespace CL_Cronos_Data
             ___GETDATA_PRODUCTCODE();
         }
 
-        // WebBrowser
-        private async void WebBrowser_DocumentCompletedAsync(object sender, WebBrowserDocumentCompletedEventArgs e)
+        // CefSharp Initialize
+        private void InitializeChromium()
         {
-            if (webBrowser.ReadyState == WebBrowserReadyState.Complete)
+            CefSettings settings = new CefSettings();
+
+            settings.CachePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\CEF";
+            Cef.Initialize(settings);
+            chromeBrowser = new ChromiumWebBrowser("http://sn.gk001.gpkbk456.com/Account/Login");
+            panel_cefsharp.Controls.Add(chromeBrowser);
+            chromeBrowser.AddressChanged += ChromiumBrowserAddressChanged;
+        }
+
+        // CefSharp Address Changed
+        private void ChromiumBrowserAddressChanged(object sender, AddressChangedEventArgs e)
+        {
+            __url = e.Address.ToString();
+            if (e.Address.ToString().Equals("http://sn.gk001.gpkbk456.com/Account/Login"))
             {
-                if (e.Url == webBrowser.Url)
+                if (__is_login)
                 {
-                    try
+                    Invoke(new Action(() =>
                     {
-                        if (webBrowser.Url.ToString().Equals(__root_url + "/Account/Login"))
-                        {
-                            if (__is_login)
-                            {
-                                pictureBox_loader.Visible = false;
-                                label_page_count.Visible = false;
-                                label_total_records.Visible = false;
-                                button_start.Visible = false;
-                                // comment
-                                __mainform_handler = Application.OpenForms[0];
-                                __mainform_handler.Size = new Size(569, 514);
-                                panel_loader.Visible = false;
-                                label_navigate_up.Enabled = false;
+                        pictureBox_loader.Visible = false;
+                        label_page_count.Visible = false;
+                        label_total_records.Visible = false;
+                        button_start.Visible = false;
+                        panel_loader.Visible = false;
+                        __mainform_handler = Application.OpenForms[0];
+                        __mainform_handler.Size = new Size(569, 514);
+                        panel_loader.Visible = false;
+                        label_navigate_up.Enabled = false;
 
-                                // comment
-                                //SendITSupport("The application have been logout, please re-login again.");
-                                SendMyBot("The application have been logout, please re-login again.");
-                                __send = 0;
-                            }
-
-                            __is_login = false;
-                            timer.Stop();
-                            webBrowser.Document.Body.Style = "zoom:.8";
-                            webBrowser.Visible = true;
-                            webBrowser.WebBrowserShortcutsEnabled = true;
-                            label_status.Text = "Logout";
-                        }
-
-                        if (webBrowser.Url.ToString().Equals("http://sn.gk001.gpk456.com/"))
-                        {
-                            pictureBox_loader.Visible = true;
-                            label_page_count.Visible = true;
-                            label_total_records.Visible = true;
-                            button_start.Visible = true;
-                            // comment
-                            __mainform_handler = Application.OpenForms[0];
-                            __mainform_handler.Size = new Size(569, 208);
-                            panel_loader.Visible = true;
-                            label_navigate_up.Enabled = false;
-
-                            if (!__is_login)
-                            {
-                                __is_login = true;
-                                webBrowser.Visible = false;
-                                pictureBox_loader.Visible = true;
-                            }
-
-                            if (!__is_start)
-                            {                                
-                                if (Properties.Settings.Default.______start_detect == "0")
-                                {
-                                    label_status.Text = "Waiting";
-                                    
-                                    button_start.Enabled = false;
-                                    panel_filter.Enabled = false;
-                                }
-                                // registration
-                                else if (Properties.Settings.Default.______start_detect == "1")
-                                {
-                                    label_status.Text = "Running";
-
-                                    comboBox_list.SelectedIndex = 0;
-                                    button_start.PerformClick();
-                                }
-                                // payment
-                                else if (Properties.Settings.Default.______start_detect == "2")
-                                {
-                                    label_status.Text = "Running";
-
-                                    comboBox_list.SelectedIndex = 1;
-                                    button_start.PerformClick();
-                                }
-                                // bonus
-                                else if (Properties.Settings.Default.______start_detect == "3")
-                                {
-                                    label_status.Text = "Running";
-
-                                    comboBox_list.SelectedIndex = 2;
-                                    button_start.PerformClick();
-                                }
-                                // turnover
-                                else if (Properties.Settings.Default.______start_detect == "4")
-                                {
-                                    label_status.Text = "Running";
-
-                                    comboBox_list.SelectedIndex = 3;
-                                    button_start.PerformClick();
-                                }
-                                // bet
-                                else if (Properties.Settings.Default.______start_detect == "5")
-                                {
-                                    label_status.Text = "Running";
-
-                                    comboBox_list.SelectedIndex = 4;
-                                    button_start.PerformClick();
-                                }
-                            }
-                            else
-                            {
-                                label_status.Text = "Waiting";
-                            }
-                        }
-                    }
-                    catch (Exception err)
-                    {
-                        // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
-                        SendMyBot(err.ToString());
-
-                        Environment.Exit(0);
-                    }
+                        SendITSupport("The application have been logout, please re-login again.");
+                        SendMyBot("The application have been logout, please re-login again.");
+                        __send = 0;
+                    }));
                 }
+
+                __is_login = false;
+
+                Invoke(new Action(() =>
+                {
+                    chromeBrowser.FrameLoadEnd += (sender_, args) =>
+                    {
+                        if (args.Frame.IsMain)
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                if (!__is_login)
+                                {
+                                    args.Frame.ExecuteJavaScriptAsync("window.scrollTo(0,document.body.scrollHeight)");
+                                    __is_login = false;
+                                    panel_cefsharp.Visible = true;
+                                    pictureBox_loader.Visible = false;
+                                    label_status.Text = "Logout";
+                                }
+                            }));
+                        }
+                    };
+                }));
+            }
+
+            if (e.Address.ToString().Equals("http://sn.gk001.gpkbk456.com/"))
+            {
+                Invoke(new Action(async () =>
+                {
+                    pictureBox_loader.Visible = true;
+                    label_page_count.Visible = true;
+                    label_total_records.Visible = true;
+                    button_start.Visible = true;
+                    __mainform_handler = Application.OpenForms[0];
+                    __mainform_handler.Size = new Size(569, 208);
+                    panel_loader.Visible = true;
+                    label_navigate_up.Enabled = false;
+
+                    if (!__is_login)
+                    {
+                        __is_login = true;
+                        panel_cefsharp.Visible = false;
+                        pictureBox_loader.Visible = true;
+                    }
+
+                    if (!__is_start)
+                    {
+                        if (Properties.Settings.Default.______start_detect == "0")
+                        {
+                            label_status.Text = "Waiting";
+
+                            button_start.Enabled = false;
+                            panel_filter.Enabled = false;
+                        }
+                        // registration
+                        else if (Properties.Settings.Default.______start_detect == "1")
+                        {
+                            label_status.Text = "Running";
+
+                            comboBox_list.SelectedIndex = 0;
+                            button_start.PerformClick();
+                        }
+                        // payment
+                        else if (Properties.Settings.Default.______start_detect == "2")
+                        {
+                            label_status.Text = "Running";
+
+                            comboBox_list.SelectedIndex = 1;
+                            button_start.PerformClick();
+                        }
+                        // bonus
+                        else if (Properties.Settings.Default.______start_detect == "3")
+                        {
+                            label_status.Text = "Running";
+
+                            comboBox_list.SelectedIndex = 2;
+                            button_start.PerformClick();
+                        }
+                        // turnover
+                        else if (Properties.Settings.Default.______start_detect == "4")
+                        {
+                            label_status.Text = "Running";
+
+                            comboBox_list.SelectedIndex = 3;
+                            button_start.PerformClick();
+                        }
+                        // bet
+                        else if (Properties.Settings.Default.______start_detect == "5")
+                        {
+                            label_status.Text = "Running";
+
+                            comboBox_list.SelectedIndex = 4;
+                            button_start.PerformClick();
+                        }
+                    }
+                    else
+                    {
+                        label_status.Text = "Waiting";
+                    }
+                }));
             }
         }
+
+        // WebBrowser
+        //private async void WebBrowser_DocumentCompletedAsync(object sender, WebBrowserDocumentCompletedEventArgs e)
+        //{
+        //    if (webBrowser.ReadyState == WebBrowserReadyState.Complete)
+        //    {
+        //        if (e.Url == webBrowser.Url)
+        //        {
+        //            try
+        //            {
+        //                if (webBrowser.Url.ToString().Equals(__root_url + "/Account/Login"))
+        //                {
+        //                    if (__is_login)
+        //                    {
+        //                        pictureBox_loader.Visible = false;
+        //                        label_page_count.Visible = false;
+        //                        label_total_records.Visible = false;
+        //                        button_start.Visible = false;
+        //                        // comment
+        //                        __mainform_handler = Application.OpenForms[0];
+        //                        __mainform_handler.Size = new Size(569, 514);
+        //                        panel_loader.Visible = false;
+        //                        label_navigate_up.Enabled = false;
+
+        //                        // comment
+        //                        //SendITSupport("The application have been logout, please re-login again.");
+        //                        SendMyBot("The application have been logout, please re-login again.");
+        //                        __send = 0;
+        //                    }
+
+        //                    __is_login = false;
+        //                    timer.Stop();
+        //                    webBrowser.Document.Body.Style = "zoom:.8";
+        //                    webBrowser.Visible = true;
+        //                    webBrowser.WebBrowserShortcutsEnabled = true;
+        //                    label_status.Text = "Logout";
+        //                }
+
+        //                if (webBrowser.Url.ToString().Equals("http://sn.gk001.gpkbk456.com/"))
+        //                {
+        //                    pictureBox_loader.Visible = true;
+        //                    label_page_count.Visible = true;
+        //                    label_total_records.Visible = true;
+        //                    button_start.Visible = true;
+        //                    // comment
+        //                    __mainform_handler = Application.OpenForms[0];
+        //                    __mainform_handler.Size = new Size(569, 208);
+        //                    panel_loader.Visible = true;
+        //                    label_navigate_up.Enabled = false;
+
+        //                    if (!__is_login)
+        //                    {
+        //                        __is_login = true;
+        //                        webBrowser.Visible = false;
+        //                        pictureBox_loader.Visible = true;
+        //                    }
+
+        //                    if (!__is_start)
+        //                    {                                
+        //                        if (Properties.Settings.Default.______start_detect == "0")
+        //                        {
+        //                            label_status.Text = "Waiting";
+
+        //                            button_start.Enabled = false;
+        //                            panel_filter.Enabled = false;
+        //                        }
+        //                        // registration
+        //                        else if (Properties.Settings.Default.______start_detect == "1")
+        //                        {
+        //                            label_status.Text = "Running";
+
+        //                            comboBox_list.SelectedIndex = 0;
+        //                            button_start.PerformClick();
+        //                        }
+        //                        // payment
+        //                        else if (Properties.Settings.Default.______start_detect == "2")
+        //                        {
+        //                            label_status.Text = "Running";
+
+        //                            comboBox_list.SelectedIndex = 1;
+        //                            button_start.PerformClick();
+        //                        }
+        //                        // bonus
+        //                        else if (Properties.Settings.Default.______start_detect == "3")
+        //                        {
+        //                            label_status.Text = "Running";
+
+        //                            comboBox_list.SelectedIndex = 2;
+        //                            button_start.PerformClick();
+        //                        }
+        //                        // turnover
+        //                        else if (Properties.Settings.Default.______start_detect == "4")
+        //                        {
+        //                            label_status.Text = "Running";
+
+        //                            comboBox_list.SelectedIndex = 3;
+        //                            button_start.PerformClick();
+        //                        }
+        //                        // bet
+        //                        else if (Properties.Settings.Default.______start_detect == "5")
+        //                        {
+        //                            label_status.Text = "Running";
+
+        //                            comboBox_list.SelectedIndex = 4;
+        //                            button_start.PerformClick();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        label_status.Text = "Waiting";
+        //                    }
+        //                }
+        //            }
+        //            catch (Exception err)
+        //            {
+        //                // comment
+        //                //SendITSupport("There's a problem to the server, please re-open the application.");
+        //                SendMyBot(err.ToString());
+
+        //                Environment.Exit(0);
+        //            }
+        //        }
+        //    }
+        //}
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -487,7 +631,7 @@ namespace CL_Cronos_Data
             DateTime today = DateTime.Now;
             DateTime date = today.AddDays(1);
             Properties.Settings.Default.______midnight_time = date.ToString("yyyy-MM-dd 00:30");
-            Properties.Settings.Default.______start_detect = "0";
+            Properties.Settings.Default.______start_detect = "1";
             Properties.Settings.Default.Save();
         }
 
@@ -610,7 +754,7 @@ namespace CL_Cronos_Data
                 try
                 {
                     label_count.Text = __timer_count--.ToString();
-                    if (label_count.Text == "-1")
+                    if (label_count.Text == "9")
                     {
                         label_status.Text = "Running";
                         panel_status.Visible = true;
@@ -625,7 +769,7 @@ namespace CL_Cronos_Data
                         {
                             await ___GETCONAsync();
                         }
-
+                        
                         if (comboBox_list.SelectedIndex == 0)
                         {
                             // Registration
@@ -671,7 +815,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -684,7 +832,7 @@ namespace CL_Cronos_Data
                     {"connectionId", "9ca65a15-aa52-4767-b486-60800fb872db"},
                 };
 
-                string result = await wc.DownloadStringTaskAsync("http://sn.gk001.gpk456.com/signalr/negotiate");
+                string result = await wc.DownloadStringTaskAsync("http://sn.gk001.gpkbk456.com/signalr/negotiate");
                 var deserialize_object = JsonConvert.DeserializeObject(result);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 __conn_id = _jo.SelectToken("$.ConnectionId");
@@ -718,7 +866,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -732,7 +884,7 @@ namespace CL_Cronos_Data
                     {"connectionId", __conn_id.ToString()},
                 };
                 
-                byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpk456.com/Member/Search", "POST", reqparm);
+                byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/Member/Search", "POST", reqparm);
                 string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -742,6 +894,11 @@ namespace CL_Cronos_Data
 
                 // REGISTRATION PROCESS DATA
                 char[] split = "*|*".ToCharArray();
+
+                if (__index_reg == 20)
+                {
+                    _jo_count = 0;
+                }
 
                 if (_jo_count.Count() > 0)
                 {
@@ -1009,7 +1166,11 @@ namespace CL_Cronos_Data
 
         private async Task<string> ___REGISTRATION_DETAILSAsync(string username)
         {
-            var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+            var cookie_manager = Cef.GetGlobalCookieManager();
+            var visitor = new CookieCollector();
+            cookie_manager.VisitUrlCookies(__url, true, visitor);
+            var cookies = await visitor.Task;
+            var cookie = CookieCollector.GetCookieHeader(cookies);
             WebClient wc = new WebClient();
 
             wc.Headers.Add("Cookie", cookie);
@@ -1022,7 +1183,7 @@ namespace CL_Cronos_Data
                 {"account", username},
             };
 
-            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpk456.com/Member/GetDetail", "POST", reqparm);
+            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/Member/GetDetail", "POST", reqparm);
             string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
             var deserialize_object = JsonConvert.DeserializeObject(responsebody);
             JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -1069,7 +1230,11 @@ namespace CL_Cronos_Data
 
         private async Task<string> ___REGISTRATION_FIRSTLASTDEPOSITAsync(string username)
         {
-            var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+            var cookie_manager = Cef.GetGlobalCookieManager();
+            var visitor = new CookieCollector();
+            cookie_manager.VisitUrlCookies(__url, true, visitor);
+            var cookies = await visitor.Task;
+            var cookie = CookieCollector.GetCookieHeader(cookies);
             WebClient wc = new WebClient();
 
             wc.Headers.Add("Cookie", cookie);
@@ -1084,7 +1249,7 @@ namespace CL_Cronos_Data
                 {"IsReal", "true"},
             };
 
-            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpk456.com/MemberTransaction/Search", "POST", reqparm);
+            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/Search", "POST", reqparm);
             string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
             var deserialize_object = JsonConvert.DeserializeObject(responsebody);
             JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -1116,7 +1281,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -1132,7 +1301,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd");
                 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/ThirdPartyPayment/LoadNew", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\",\"States\":[3,4,5],\"IsCheckStates\":true,\"isDTPP\":true}}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/ThirdPartyPayment/LoadNew", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\",\"States\":[3,4,5],\"IsCheckStates\":true,\"isDTPP\":true}}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.Data");
@@ -1395,7 +1564,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -1411,7 +1584,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":true,\"Types\":[\"Manual\"],\"pageIndex\":" + index + "}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":true,\"Types\":[\"Manual\"],\"pageIndex\":" + index + "}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -1705,7 +1878,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -1721,7 +1898,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd");
                 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/VerifyWithdraw/Load", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\"}}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/VerifyWithdraw/Load", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\"}}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.Data");
@@ -2121,7 +2298,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -2137,7 +2318,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":\"false\",\"Types\":[\"Manual\",\"Bonus\",\"Other\",\"AnyTimeDiscount\",\"Discount\"],\"pageIndex\":" + index + "}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":\"false\",\"Types\":[\"Manual\",\"Bonus\",\"Other\",\"AnyTimeDiscount\",\"Discount\"],\"pageIndex\":" + index + "}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -2477,7 +2658,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -2493,7 +2678,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/MemberTransaction/GetDetail", "{\"id\":\"" + id + "\"}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/GetDetail", "{\"id\":\"" + id + "\"}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _operator_name = _jo.SelectToken("$.Detail.CreateName").ToString();
@@ -2548,7 +2733,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers[HttpRequestHeader.ContentType] = "application/json";
@@ -2567,7 +2756,7 @@ namespace CL_Cronos_Data
                 wc.Headers.Add("Cookie", cookie);
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                string responsebody = await wc.DownloadStringTaskAsync("http://sn.gk001.gpk456.com/Statistics/Export?begin=" + start + "&end=" + end + "");
+                string responsebody = await wc.DownloadStringTaskAsync("http://sn.gk001.gpkbk456.com/Statistics/Export?begin=" + start + "&end=" + end + "");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_success = _jo.SelectToken("$.IsSuccess");
@@ -3033,7 +3222,11 @@ namespace CL_Cronos_Data
 
         private async Task<string> ___TURNOVER_VIP_REGMONTHAsync(string username)
         {
-            var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+            var cookie_manager = Cef.GetGlobalCookieManager();
+            var visitor = new CookieCollector();
+            cookie_manager.VisitUrlCookies(__url, true, visitor);
+            var cookies = await visitor.Task;
+            var cookie = CookieCollector.GetCookieHeader(cookies);
             WebClient wc = new WebClient();
 
             wc.Headers.Add("Cookie", cookie);
@@ -3047,7 +3240,7 @@ namespace CL_Cronos_Data
                 {"connectionId", __conn_id.ToString()},
             };
 
-            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpk456.com/Member/Search", "POST", reqparm);
+            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/Member/Search", "POST", reqparm);
             string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
             var deserialize_object = JsonConvert.DeserializeObject(responsebody);
             JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -3083,7 +3276,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -3099,7 +3296,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\", \"pageIndex\": " + index + "}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\", \"pageIndex\": " + index + "}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -3332,7 +3529,11 @@ namespace CL_Cronos_Data
         {
             try
             {
-                var cookie = Cookie.GetCookieInternal(webBrowser.Url, false);
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
                 WebClient wc = new WebClient();
 
                 wc.Headers.Add("Cookie", cookie);
@@ -3348,8 +3549,8 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                //string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"UnpayOnly\":\"True\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + __index_bet_unpay + "\"}");
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"2019/03/01 00:00:00\",\"UnpayOnly\":\"True\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + index + "\"}");
+                //string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"UnpayOnly\":\"True\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + __index_bet_unpay + "\"}");
+                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"2019/03/01 00:00:00\",\"UnpayOnly\":\"True\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + index + "\"}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");

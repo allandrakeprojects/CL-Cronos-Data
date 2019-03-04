@@ -37,7 +37,6 @@
             this.pictureBox_close = new System.Windows.Forms.PictureBox();
             this.label_title_cl = new System.Windows.Forms.Label();
             this.panel_cl = new System.Windows.Forms.Panel();
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.panel_status = new System.Windows.Forms.Panel();
             this.label_insert = new System.Windows.Forms.Label();
             this.button_proceed = new System.Windows.Forms.Button();
@@ -90,6 +89,7 @@
             this.pictureBox_loader_loader = new System.Windows.Forms.PictureBox();
             this.panel_landing = new System.Windows.Forms.Panel();
             this.pictureBox_landing = new System.Windows.Forms.PictureBox();
+            this.panel_cefsharp = new System.Windows.Forms.Panel();
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -185,7 +185,7 @@
             // 
             // panel_cl
             // 
-            this.panel_cl.Controls.Add(this.webBrowser);
+            this.panel_cl.Controls.Add(this.panel_cefsharp);
             this.panel_cl.Controls.Add(this.panel_status);
             this.panel_cl.Controls.Add(this.label_navigate_up);
             this.panel_cl.Controls.Add(this.label_title_cl);
@@ -196,15 +196,6 @@
             this.panel_cl.Size = new System.Drawing.Size(534, 408);
             this.panel_cl.TabIndex = 4;
             this.panel_cl.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_cl_Paint);
-            // 
-            // webBrowser
-            // 
-            this.webBrowser.Location = new System.Drawing.Point(6, 35);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(522, 367);
-            this.webBrowser.TabIndex = 13;
-            this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.WebBrowser_DocumentCompletedAsync);
             // 
             // panel_status
             // 
@@ -762,6 +753,16 @@
             this.pictureBox_landing.TabIndex = 0;
             this.pictureBox_landing.TabStop = false;
             // 
+            // panel_cefsharp
+            // 
+            this.panel_cefsharp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_cefsharp.Location = new System.Drawing.Point(6, 35);
+            this.panel_cefsharp.Name = "panel_cefsharp";
+            this.panel_cefsharp.Size = new System.Drawing.Size(522, 367);
+            this.panel_cefsharp.TabIndex = 45;
+            // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -860,7 +861,6 @@
         private System.Windows.Forms.Timer timer_cycle_in;
         private System.Windows.Forms.Timer timer_start_button;
         private System.Windows.Forms.Timer timer_elapsed;
-        private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.Timer timer_close_message_box;
         private System.Windows.Forms.Timer timer_flush_memory;
         private System.Windows.Forms.Timer timer_midnight;
@@ -870,5 +870,6 @@
         private System.Windows.Forms.PictureBox pictureBox_loader_loader;
         private System.Windows.Forms.Panel panel_landing;
         private System.Windows.Forms.PictureBox pictureBox_landing;
+        private System.Windows.Forms.Panel panel_cefsharp;
     }
 }

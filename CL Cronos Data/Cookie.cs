@@ -1,99 +1,49 @@
-﻿using System;
-using System.ComponentModel;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Permissions;
+﻿using CefSharp;
+using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace CL_Cronos_Data
 {
-    internal sealed class NativeMethods
+    public class CookieCollector : ICookieVisitor
     {
-        #region enums
+        private readonly TaskCompletionSource<List<Cookie>> _source = new TaskCompletionSource<List<Cookie>>();
 
-        public enum ErrorFlags
+        public bool Visit(Cookie cookie, int count, int total, ref bool deleteCookie)
         {
-            ERROR_INSUFFICIENT_BUFFER = 122,
-            ERROR_INVALID_PARAMETER = 87,
-            ERROR_NO_MORE_ITEMS = 259
+            _cookies.Add(cookie);
+
+            if (count == (total - 1))
+            {
+                _source.SetResult(_cookies);
+            }
+
+            return true;
         }
 
-        public enum InternetFlags
+        public Task<List<Cookie>> Task => _source.Task;
+
+        public static string GetCookieHeader(List<Cookie> cookies)
         {
-            INTERNET_COOKIE_HTTPONLY = 8192, //Requires IE 8 or higher   
-            INTERNET_COOKIE_THIRD_PARTY = 131072,
-            INTERNET_FLAG_RESTRICTED_ZONE = 16
+
+            StringBuilder cookieString = new StringBuilder();
+            string delimiter = string.Empty;
+
+            foreach (var cookie in cookies)
+            {
+                cookieString.Append(delimiter);
+                cookieString.Append(cookie.Name);
+                cookieString.Append('=');
+                cookieString.Append(cookie.Value);
+                delimiter = "; ";
+            }
+
+            return cookieString.ToString();
         }
 
-        #endregion
-
-        #region DLL Imports
-
-        [SuppressUnmanagedCodeSecurity, SecurityCritical, DllImport("wininet.dll", EntryPoint = "InternetGetCookieExW", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        internal static extern bool InternetGetCookieEx([In] string Url, [In] string cookieName, [Out] StringBuilder cookieData, [In, Out] ref uint pchCookieData, uint flags, IntPtr reserved);
-
-        #endregion
-    }
-
-    public class Cookie : WebBrowser
-    {
-        [SecurityCritical]
-        public static string GetCookieInternal(Uri uri, bool throwIfNoCookie)
+        private readonly List<Cookie> _cookies = new List<Cookie>();
+        public void Dispose()
         {
-            uint pchCookieData = 0;
-            string url = UriToString(uri);
-            uint flag = (uint)NativeMethods.InternetFlags.INTERNET_COOKIE_HTTPONLY;
-
-            //Gets the size of the string builder   
-            if (NativeMethods.InternetGetCookieEx(url, null, null, ref pchCookieData, flag, IntPtr.Zero))
-            {
-                pchCookieData++;
-                StringBuilder cookieData = new StringBuilder((int)pchCookieData);
-
-                //Read the cookie   
-                if (NativeMethods.InternetGetCookieEx(url, null, cookieData, ref pchCookieData, flag, IntPtr.Zero))
-                {
-                    DemandWebPermission(uri);
-                    return cookieData.ToString();
-                }
-            }
-
-            int lastErrorCode = Marshal.GetLastWin32Error();
-
-            if (throwIfNoCookie || (lastErrorCode != (int)NativeMethods.ErrorFlags.ERROR_NO_MORE_ITEMS))
-            {
-                throw new Win32Exception(lastErrorCode);
-            }
-
-            return null;
-        }
-
-        private static void DemandWebPermission(Uri uri)
-        {
-            string uriString = UriToString(uri);
-
-            if (uri.IsFile)
-            {
-                string localPath = uri.LocalPath;
-                new FileIOPermission(FileIOPermissionAccess.Read, localPath).Demand();
-            }
-            else
-            {
-                new WebPermission(NetworkAccess.Connect, uriString).Demand();
-            }
-        }
-
-        private static string UriToString(Uri uri)
-        {
-            if (uri == null)
-            {
-                throw new ArgumentNullException("uri");
-            }
-
-            UriComponents components = (uri.IsAbsoluteUri ? UriComponents.AbsoluteUri : UriComponents.SerializationInfoString);
-            return new StringBuilder(uri.GetComponents(components, UriFormat.SafeUnescaped), 2083).ToString();
         }
     }
 }
