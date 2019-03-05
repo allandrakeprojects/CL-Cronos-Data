@@ -57,7 +57,7 @@ namespace CL_Cronos_Data
         List<String> __getdata_paymentmethodlist = new List<String>();
         List<String> __getdata_bonuscode = new List<String>();
         List<String> __getdata_productcode = new List<String>();
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        Timer timer = new Timer();
         Form __mainform_handler;
 
 
@@ -279,7 +279,7 @@ namespace CL_Cronos_Data
 
             settings.CachePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\CEF";
             Cef.Initialize(settings);
-            chromeBrowser = new ChromiumWebBrowser("http://sn.gk001.gpkbk456.com/Account/Login");
+            chromeBrowser = new ChromiumWebBrowser(__root_url + "/Account/Login");
             panel_cefsharp.Controls.Add(chromeBrowser);
             chromeBrowser.AddressChanged += ChromiumBrowserAddressChanged;
         }
@@ -288,7 +288,7 @@ namespace CL_Cronos_Data
         private void ChromiumBrowserAddressChanged(object sender, AddressChangedEventArgs e)
         {
             __url = e.Address.ToString();
-            if (e.Address.ToString().Equals("http://sn.gk001.gpkbk456.com/Account/Login"))
+            if (e.Address.ToString().Equals(__root_url + "/Account/Login"))
             {
                 if (__is_login)
                 {
@@ -304,7 +304,7 @@ namespace CL_Cronos_Data
                         panel_loader.Visible = false;
                         label_navigate_up.Enabled = false;
 
-                        SendITSupport("The application have been logout, please re-login again.");
+                        //SendITSupport("The application have been logout, please re-login again.");
                         SendMyBot("The application have been logout, please re-login again.");
                         __send = 0;
                     }));
@@ -333,8 +333,8 @@ namespace CL_Cronos_Data
                     };
                 }));
             }
-
-            if (e.Address.ToString().Equals("http://sn.gk001.gpkbk456.com/"))
+            
+            if (e.Address.ToString().Equals(__root_url + "/"))
             {
                 Invoke(new Action(async () =>
                 {
@@ -449,7 +449,7 @@ namespace CL_Cronos_Data
         //                    label_status.Text = "Logout";
         //                }
 
-        //                if (webBrowser.Url.ToString().Equals("http://sn.gk001.gpkbk456.com/"))
+        //                if (webBrowser.Url.ToString().Equals(__root_url + "/"))
         //                {
         //                    pictureBox_loader.Visible = true;
         //                    label_page_count.Visible = true;
@@ -631,7 +631,7 @@ namespace CL_Cronos_Data
             DateTime today = DateTime.Now;
             DateTime date = today.AddDays(1);
             Properties.Settings.Default.______midnight_time = date.ToString("yyyy-MM-dd 00:30");
-            Properties.Settings.Default.______start_detect = "1";
+            Properties.Settings.Default.______start_detect = "0";
             Properties.Settings.Default.Save();
         }
 
@@ -754,7 +754,7 @@ namespace CL_Cronos_Data
                 try
                 {
                     label_count.Text = __timer_count--.ToString();
-                    if (label_count.Text == "9")
+                    if (label_count.Text == "-1")
                     {
                         label_status.Text = "Running";
                         panel_status.Visible = true;
@@ -832,7 +832,7 @@ namespace CL_Cronos_Data
                     {"connectionId", "9ca65a15-aa52-4767-b486-60800fb872db"},
                 };
 
-                string result = await wc.DownloadStringTaskAsync("http://sn.gk001.gpkbk456.com/signalr/negotiate");
+                string result = await wc.DownloadStringTaskAsync(__root_url + "/signalr/negotiate");
                 var deserialize_object = JsonConvert.DeserializeObject(result);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 __conn_id = _jo.SelectToken("$.ConnectionId");
@@ -883,8 +883,8 @@ namespace CL_Cronos_Data
                     {"pageIndex", index.ToString()},
                     {"connectionId", __conn_id.ToString()},
                 };
-                
-                byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/Member/Search", "POST", reqparm);
+
+                byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/Member/Search", "POST", reqparm);
                 string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -894,12 +894,7 @@ namespace CL_Cronos_Data
 
                 // REGISTRATION PROCESS DATA
                 char[] split = "*|*".ToCharArray();
-
-                if (__index_reg == 20)
-                {
-                    _jo_count = 0;
-                }
-
+                
                 if (_jo_count.Count() > 0)
                 {
                     for (int i = 0; i < _jo_count.Count(); i++)
@@ -1024,6 +1019,7 @@ namespace CL_Cronos_Data
                     }
 
                     await ___REGISTRATIONAsync(__index_reg++);
+                    return;
                 }
                 else
                 {
@@ -1062,7 +1058,6 @@ namespace CL_Cronos_Data
                         File.Delete(_folder_path_result_xlsx);
                     }
 
-                    __DATA.ToString().Reverse();
                     File.WriteAllText(_folder_path_result, __DATA.ToString(), Encoding.UTF8);
 
                     Excel.Application app = new Excel.Application();
@@ -1116,7 +1111,7 @@ namespace CL_Cronos_Data
                     }
 
                     __DATA.Clear();
-                    
+
                     // REGISTRATION SEND TO DATABASE
                     // AUTO START
 
@@ -1183,7 +1178,7 @@ namespace CL_Cronos_Data
                 {"account", username},
             };
 
-            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/Member/GetDetail", "POST", reqparm);
+            byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/Member/GetDetail", "POST", reqparm);
             string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
             var deserialize_object = JsonConvert.DeserializeObject(responsebody);
             JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -1249,7 +1244,7 @@ namespace CL_Cronos_Data
                 {"IsReal", "true"},
             };
 
-            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/Search", "POST", reqparm);
+            byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/MemberTransaction/Search", "POST", reqparm);
             string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
             var deserialize_object = JsonConvert.DeserializeObject(responsebody);
             JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -1301,7 +1296,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd");
                 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/ThirdPartyPayment/LoadNew", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\",\"States\":[3,4,5],\"IsCheckStates\":true,\"isDTPP\":true}}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/ThirdPartyPayment/LoadNew", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\",\"States\":[3,4,5],\"IsCheckStates\":true,\"isDTPP\":true}}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.Data");
@@ -1506,8 +1501,8 @@ namespace CL_Cronos_Data
                         }
                         else if (_ld_date == _last_month)
                         {
-                            _retained = "Not Retained";
-                            _new = "New";
+                            _retained = "Retained";
+                            _new = "Not New";
                             _reactivated = "Not Reactivated";
                         }
                         else
@@ -1584,7 +1579,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":true,\"Types\":[\"Manual\"],\"pageIndex\":" + index + "}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":true,\"Types\":[\"Manual\"],\"pageIndex\":" + index + "}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -1772,51 +1767,32 @@ namespace CL_Cronos_Data
                                 _fd_date_month = _detail;
                             }
                         }
-                        // ----- New
+
+                        // ----- Retained && New && Reactivated
                         string _new = "";
                         string _retained = "";
                         string _reactivated = "";
                         if (_status.ToString() == "Success" && !_username.ToString().ToLower().Contains("test"))
                         {
-                            if (_fd_date != "" && _ld_date != "")
+                            string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
+                            string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+                            if (_fd_date == _current_month)
                             {
-                                DateTime _fd_date_ = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                                DateTime _ld_date_ = DateTime.ParseExact(_ld_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-
-                                var _last2months = DateTime.Today.AddMonths(-2);
-                                DateTime _last2months_ = DateTime.ParseExact(_last2months.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                                if (_ld_date_ >= _last2months_)
-                                {
-                                    _retained = "Retained";
-                                }
-                                else
-                                {
-                                    _retained = "Not Retained";
-                                }
-
-                                string _month_ = DateTime.Now.Month.ToString();
-                                string _year_ = DateTime.Now.Year.ToString();
-                                string _year_month = _year_ + "-" + _month_;
-
-                                // new
-                                if (_fd_date_.ToString("yyyy-MM") == _year_month)
-                                {
-                                    _new = "New";
-                                }
-                                else
-                                {
-                                    _new = "Not New";
-                                }
-
-                                // reactivated
-                                if (_retained == "Not Retained" && _new == "Not New")
-                                {
-                                    _reactivated = "Reactivated";
-                                }
-                                else
-                                {
-                                    _reactivated = "Not Reactivated";
-                                }
+                                _retained = "Not Retained";
+                                _new = "New";
+                                _reactivated = "Not Reactivated";
+                            }
+                            else if (_ld_date == _last_month)
+                            {
+                                _retained = "Retained";
+                                _new = "Not New";
+                                _reactivated = "Not Reactivated";
+                            }
+                            else
+                            {
+                                _retained = "Not Retained";
+                                _new = "Not New";
+                                _reactivated = "Reactivated";
                             }
                         }
                         else
@@ -1843,6 +1819,7 @@ namespace CL_Cronos_Data
                     }
 
                     await ___PAYMENT_DEPOSITMANUALAsync(__index_dep++);
+                    return;
                 }
                 else
                 {
@@ -1898,7 +1875,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd");
                 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/VerifyWithdraw/Load", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\"}}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/VerifyWithdraw/Load", "{\"count\":" + __page_size + ",\"minId\":null,\"query\":{\"search\":\"true\",\"ApplyDateBegin\":\"" + start + "\",\"ApplyDateEnd\":\"" + end + "\"}}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.Data");
@@ -2083,51 +2060,31 @@ namespace CL_Cronos_Data
                             _fd_date_month = _detail;
                         }
                     }
-                    // ----- New
+                    // ----- Retained && New && Reactivated
                     string _new = "";
                     string _retained = "";
                     string _reactivated = "";
                     if (_status.ToString() == "Success" && !_username.ToString().ToLower().Contains("test"))
                     {
-                        if (_fd_date != "" && _ld_date != "")
+                        string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
+                        string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+                        if (_fd_date == _current_month)
                         {
-                            DateTime _fd_date_ = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                            DateTime _ld_date_ = DateTime.ParseExact(_ld_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-
-                            var _last2months = DateTime.Today.AddMonths(-2);
-                            DateTime _last2months_ = DateTime.ParseExact(_last2months.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                            if (_ld_date_ >= _last2months_)
-                            {
-                                _retained = "Retained";
-                            }
-                            else
-                            {
-                                _retained = "Not Retained";
-                            }
-
-                            string _month_ = DateTime.Now.Month.ToString();
-                            string _year_ = DateTime.Now.Year.ToString();
-                            string _year_month = _year_ + "-" + _month_;
-
-                            // new
-                            if (_fd_date_.ToString("yyyy-MM") == _year_month)
-                            {
-                                _new = "New";
-                            }
-                            else
-                            {
-                                _new = "Not New";
-                            }
-
-                            // reactivated
-                            if (_retained == "Not Retained" && _new == "Not New")
-                            {
-                                _reactivated = "Reactivated";
-                            }
-                            else
-                            {
-                                _reactivated = "Not Reactivated";
-                            }
+                            _retained = "Not Retained";
+                            _new = "New";
+                            _reactivated = "Not Reactivated";
+                        }
+                        else if (_ld_date == _last_month)
+                        {
+                            _retained = "Retained";
+                            _new = "Not New";
+                            _reactivated = "Not Reactivated";
+                        }
+                        else
+                        {
+                            _retained = "Not Retained";
+                            _new = "Not New";
+                            _reactivated = "Reactivated";
                         }
                     }
                     else
@@ -2318,7 +2275,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":\"false\",\"Types\":[\"Manual\",\"Bonus\",\"Other\",\"AnyTimeDiscount\",\"Discount\"],\"pageIndex\":" + index + "}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/MemberTransaction/Search", "{\"TimeBegin\":\"" + start + "\",\"TimeEnd\":\"" + end + "\",\"IsReal\":\"false\",\"Types\":[\"Manual\",\"Bonus\",\"Other\",\"AnyTimeDiscount\",\"Discount\"],\"pageIndex\":" + index + "}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -2509,6 +2466,7 @@ namespace CL_Cronos_Data
                     }
 
                     await ___BONUSAsync(__index_bon++);
+                    return;
                 }
                 else
                 {
@@ -2678,7 +2636,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/MemberTransaction/GetDetail", "{\"id\":\"" + id + "\"}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/MemberTransaction/GetDetail", "{\"id\":\"" + id + "\"}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _operator_name = _jo.SelectToken("$.Detail.CreateName").ToString();
@@ -2756,7 +2714,7 @@ namespace CL_Cronos_Data
                 wc.Headers.Add("Cookie", cookie);
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                string responsebody = await wc.DownloadStringTaskAsync("http://sn.gk001.gpkbk456.com/Statistics/Export?begin=" + start + "&end=" + end + "");
+                string responsebody = await wc.DownloadStringTaskAsync(__root_url + "/Statistics/Export?begin=" + start + "&end=" + end + "");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_success = _jo.SelectToken("$.IsSuccess");
@@ -3017,26 +2975,19 @@ namespace CL_Cronos_Data
                         string _month_ = DateTime.Now.Month.ToString();
                         string _year_ = DateTime.Now.Year.ToString();
                         string _year_month = _year_ + "-" + _month_;
-                        if (_fd_date != "" && _ld_date != "")
+                        string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
+                        string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+                        if (_fd_date == _current_month)
                         {
-                            string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
-                            string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
-                            if (_fd_date == _current_month)
-                            {
-                                _retained = "Not Retained";
-                            }
-                            else if (_ld_date == _last_month)
-                            {
-                                _retained = "Not Retained";
-                            }
-                            else
-                            {
-                                _retained = "Not Retained";
-                            }
+                            _retained = "Not Retained";
+                        }
+                        else if (_ld_date == _last_month)
+                        {
+                            _retained = "Retained";
                         }
                         else
                         {
-                            _retained = "No";
+                            _retained = "Not Retained";
                         }
                         // ----- New Based on Reg && Reg Month
                         string _new_based_on_reg = "";
@@ -3240,7 +3191,7 @@ namespace CL_Cronos_Data
                 {"connectionId", __conn_id.ToString()},
             };
 
-            byte[] result = await wc.UploadValuesTaskAsync("http://sn.gk001.gpkbk456.com/Member/Search", "POST", reqparm);
+            byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/Member/Search", "POST", reqparm);
             string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
             var deserialize_object = JsonConvert.DeserializeObject(responsebody);
             JObject _jo = JObject.Parse(deserialize_object.ToString());
@@ -3296,7 +3247,7 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\", \"pageIndex\": " + index + "}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\", \"pageIndex\": " + index + "}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -3368,6 +3319,7 @@ namespace CL_Cronos_Data
                     }
 
                     await ___BETAsync(__index_bet++);
+                    return;
                 }
                 else
                 {
@@ -3549,8 +3501,8 @@ namespace CL_Cronos_Data
                 DateTime datetime_end = DateTime.ParseExact(end, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 end = datetime_end.ToString("yyyy/MM/dd 23:59:59");
 
-                //string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"UnpayOnly\":\"True\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + __index_bet_unpay + "\"}");
-                string responsebody = await wc.UploadStringTaskAsync("http://sn.gk001.gpkbk456.com/BetRecord/Search", "{\"WagersTimeBegin\":\"2019/03/01 00:00:00\",\"UnpayOnly\":\"True\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + index + "\"}");
+                //string responsebody = await wc.UploadStringTaskAsync(__root_url + "/BetRecord/Search", "{\"WagersTimeBegin\":\"" + start + "\",\"UnpayOnly\":\"True\",\"WagersTimeEnd\":\"" + end + "\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + __index_bet_unpay + "\"}");
+                string responsebody = await wc.UploadStringTaskAsync(__root_url + "/BetRecord/Search", "{\"WagersTimeBegin\":\"2019/03/01 00:00:00\",\"UnpayOnly\":\"True\",\"connectionId\":\"" + __conn_id + "\",\"pageIndex\":\"" + index + "\"}");
                 var deserialize_object = JsonConvert.DeserializeObject(responsebody);
                 JObject _jo = JObject.Parse(deserialize_object.ToString());
                 JToken _jo_count = _jo.SelectToken("$.PageData");
@@ -3588,6 +3540,7 @@ namespace CL_Cronos_Data
                     }
 
                     await ___BET_UNPAYAsync(__index_bet_unpay++);
+                    return;
                 }
                 else
                 {

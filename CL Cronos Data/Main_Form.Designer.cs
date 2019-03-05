@@ -37,6 +37,7 @@
             this.pictureBox_close = new System.Windows.Forms.PictureBox();
             this.label_title_cl = new System.Windows.Forms.Label();
             this.panel_cl = new System.Windows.Forms.Panel();
+            this.panel_cefsharp = new System.Windows.Forms.Panel();
             this.panel_status = new System.Windows.Forms.Panel();
             this.label_insert = new System.Windows.Forms.Label();
             this.button_proceed = new System.Windows.Forms.Button();
@@ -89,7 +90,6 @@
             this.pictureBox_loader_loader = new System.Windows.Forms.PictureBox();
             this.panel_landing = new System.Windows.Forms.Panel();
             this.pictureBox_landing = new System.Windows.Forms.PictureBox();
-            this.panel_cefsharp = new System.Windows.Forms.Panel();
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -196,6 +196,16 @@
             this.panel_cl.Size = new System.Drawing.Size(534, 408);
             this.panel_cl.TabIndex = 4;
             this.panel_cl.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_cl_Paint);
+            // 
+            // panel_cefsharp
+            // 
+            this.panel_cefsharp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_cefsharp.Location = new System.Drawing.Point(6, 35);
+            this.panel_cefsharp.Name = "panel_cefsharp";
+            this.panel_cefsharp.Size = new System.Drawing.Size(522, 367);
+            this.panel_cefsharp.TabIndex = 45;
             // 
             // panel_status
             // 
@@ -752,16 +762,6 @@
             this.pictureBox_landing.Size = new System.Drawing.Size(135, 134);
             this.pictureBox_landing.TabIndex = 0;
             this.pictureBox_landing.TabStop = false;
-            // 
-            // panel_cefsharp
-            // 
-            this.panel_cefsharp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel_cefsharp.Location = new System.Drawing.Point(6, 35);
-            this.panel_cefsharp.Name = "panel_cefsharp";
-            this.panel_cefsharp.Size = new System.Drawing.Size(522, 367);
-            this.panel_cefsharp.TabIndex = 45;
             // 
             // Main_Form
             // 
