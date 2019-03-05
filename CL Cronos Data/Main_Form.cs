@@ -1499,7 +1499,7 @@ namespace CL_Cronos_Data
                             _new = "New";
                             _reactivated = "Not Reactivated";
                         }
-                        else if (_ld_date == _last_month)
+                        else if (_fd_date == _current_month || _ld_date == _last_month)
                         {
                             _retained = "Retained";
                             _new = "Not New";
@@ -1782,7 +1782,7 @@ namespace CL_Cronos_Data
                                 _new = "New";
                                 _reactivated = "Not Reactivated";
                             }
-                            else if (_ld_date == _last_month)
+                            else if (_fd_date == _current_month || _ld_date == _last_month)
                             {
                                 _retained = "Retained";
                                 _new = "Not New";
@@ -2074,7 +2074,7 @@ namespace CL_Cronos_Data
                             _new = "New";
                             _reactivated = "Not Reactivated";
                         }
-                        else if (_ld_date == _last_month)
+                        else if (_fd_date == _current_month || _ld_date == _last_month)
                         {
                             _retained = "Retained";
                             _new = "Not New";
@@ -2981,7 +2981,7 @@ namespace CL_Cronos_Data
                         {
                             _retained = "Not Retained";
                         }
-                        else if (_ld_date == _last_month)
+                        else if (_fd_date == _current_month || _ld_date == _last_month)
                         {
                             _retained = "Retained";
                         }
