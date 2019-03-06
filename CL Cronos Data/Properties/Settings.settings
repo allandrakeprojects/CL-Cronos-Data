@@ -14,5 +14,8 @@
     <Setting Name="______server_location" Type="System.String" Scope="User">
       <Value Profile="(Default)">Robinsons Summit</Value>
     </Setting>
+    <Setting Name="______turnover" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

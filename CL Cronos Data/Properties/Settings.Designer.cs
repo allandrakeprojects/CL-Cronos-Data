@@ -70,5 +70,17 @@ namespace CL_Cronos_Data.Properties {
                 this["______server_location"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ______turnover {
+            get {
+                return ((string)(this["______turnover"]));
+            }
+            set {
+                this["______turnover"] = value;
+            }
+        }
     }
 }

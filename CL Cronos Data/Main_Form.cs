@@ -217,7 +217,7 @@ namespace CL_Cronos_Data
             if (dr == DialogResult.Yes)
             {
                 __is_close = false;
-                Environment.Exit(0);
+                //Environment.Exit(0);
             }
         }
 
@@ -530,7 +530,7 @@ namespace CL_Cronos_Data
         //                //SendITSupport("There's a problem to the server, please re-open the application.");
         //                SendMyBot(err.ToString());
 
-        //                Environment.Exit(0);
+        //                //Environment.Exit(0);
         //            }
         //        }
         //    }
@@ -631,7 +631,7 @@ namespace CL_Cronos_Data
             DateTime today = DateTime.Now;
             DateTime date = today.AddDays(1);
             Properties.Settings.Default.______midnight_time = date.ToString("yyyy-MM-dd 00:30");
-            Properties.Settings.Default.______start_detect = "0";
+            Properties.Settings.Default.______start_detect = "1";
             Properties.Settings.Default.Save();
         }
 
@@ -667,10 +667,24 @@ namespace CL_Cronos_Data
                 {
                     label_cycle_in.Text = timeRemaining.Minutes + " min(s) " + timeRemaining.Seconds + " sec(s)";
                 }
-            }
-            else
-            {
-                label_cycle_in.Text = "-";
+
+                if (Properties.Settings.Default.______midnight_time != "")
+                {
+                    if (label_cycle_in.Text.Contains("-"))
+                    {
+                        panel_cl.Enabled = false;
+
+                        DateTime today = DateTime.Now;
+                        DateTime date = today.AddDays(1);
+                        Properties.Settings.Default.______midnight_time = date.ToString("yyyy-MM-dd 00:30");
+                        Properties.Settings.Default.______start_detect = "1";
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        panel_cl.Enabled = true;
+                    }
+                }
             }
         }
 
@@ -774,7 +788,7 @@ namespace CL_Cronos_Data
                         {
                             // Registration
                             label_cl_status.Text = "status: doing calculation... --- MEMBER LIST";
-                            await ___REGISTRATIONAsync(0);
+                            ___REGISTRATIONAsync(0);
                         }
                         else if (comboBox_list.SelectedIndex == 1)
                         {
@@ -799,7 +813,7 @@ namespace CL_Cronos_Data
                             // Bet Record Record
                             label_cl_status.Text = "status: doing calculation... --- BET RECORD";
                             await ___BET_UNPAYAsync(0);
-                            await ___BETAsync(0);
+                            ___BETAsync(0);
                         }
                     }
                 }
@@ -850,7 +864,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
                         
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -862,7 +876,7 @@ namespace CL_Cronos_Data
         }
 
         // REGISTRATION -----
-        private async Task ___REGISTRATIONAsync(int index)
+        private async void ___REGISTRATIONAsync(int index)
         {
             try
             {
@@ -899,7 +913,7 @@ namespace CL_Cronos_Data
                 {
                     for (int i = 0; i < _jo_count.Count(); i++)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
                         __display_count++;
                         label_total_records.Text = __display_count.ToString("N0");
 
@@ -945,7 +959,8 @@ namespace CL_Cronos_Data
                             _status = "Active";
                         }
                         // -----
-                        string _details = await ___REGISTRATION_DETAILSAsync(_username.ToString());
+                        //string _details = await ___REGISTRATION_DETAILSAsync(_username.ToString());
+                        string _details = "";
                         string[] _details_replace = _details.Split('|');
                         string _phone = "";
                         string _email = "";
@@ -985,7 +1000,8 @@ namespace CL_Cronos_Data
                         }
                         // ----- Last Deposit Date
                         // ----- First Deposit Data
-                        string _fd_ld_date = await ___REGISTRATION_FIRSTLASTDEPOSITAsync(_username.ToString());
+                        //string _fd_ld_date = await ___REGISTRATION_FIRSTLASTDEPOSITAsync(_username.ToString());
+                        string _fd_ld_date = "";
                         string[] _fd_ld_date_replace = _fd_ld_date.Split('|');
                         string _fd_date = "";
                         string _ld_date = "";
@@ -1018,8 +1034,7 @@ namespace CL_Cronos_Data
                         __DATA.AppendLine(data);
                     }
 
-                    await ___REGISTRATIONAsync(__index_reg++);
-                    return;
+                    ___REGISTRATIONAsync(__index_reg++);
                 }
                 else
                 {
@@ -1148,12 +1163,13 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
                         ___WaitNSeconds(10);
-                        await ___REGISTRATIONAsync(__index_reg);
+                        ___REGISTRATIONAsync(__index_reg);
+                        return;
                     }
                 }
             }
@@ -1311,7 +1327,7 @@ namespace CL_Cronos_Data
 
                 for (int i = 0; i < 10; i++)
                 {
-                    Application.DoEvents();
+                    //Application.DoEvents();
                     __display_count++;
                     label_total_records.Text = __display_count.ToString("N0") + " of " + int.Parse(_jo_count.Count().ToString()).ToString("N0");
 
@@ -1491,25 +1507,75 @@ namespace CL_Cronos_Data
                     string _reactivated = "";
                     if (_status.ToString() == "Success" && !_username.ToString().ToLower().Contains("test"))
                     {
-                        string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
-                        string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
-                        if (_fd_date == _current_month)
+                        //if (_fd_date_.ToString("MM/yyyy") == _current_month)
+                        //{
+                        //    _retained = "Not Retained";
+                        //    _new = "New";
+                        //    _reactivated = "Not Reactivated";
+                        //}
+                        //else if (_fd_date_.ToString("MM/yyyy") == _current_month || _ld_date_.ToString("MM/yyyy") == _last_month || _ld_date_.ToString("MM/yyyy") == _current_month)
+                        //{
+                        //    _retained = "Retained";
+                        //    _new = "Not New";
+                        //    _reactivated = "Not Reactivated";
+                        //}
+                        //else
+                        //{
+                        //    _retained = "Not Retained";
+                        //    _new = "Not New";
+                        //    _reactivated = "Reactivated";
+                        //}
+                        
+                        try
                         {
-                            _retained = "Not Retained";
-                            _new = "New";
-                            _reactivated = "Not Reactivated";
+                            DateTime _fd_date_ = DateTime.ParseExact(_fd_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                            DateTime _ld_date_ = DateTime.ParseExact(_ld_date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                            string _current_month = DateTime.Now.ToString("MM/yyyy");
+                            string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/yyyy");
+
+                            if (_fd_date_.ToString("MM/yyyy") == _current_month)
+                            {
+                                _retained = "Not Retained";
+                            }
+                            else if (_fd_date_.ToString("MM/yyyy") == _last_month || _ld_date_.ToString("MM/yyyy") == _last_month || _ld_date_.ToString("MM/yyyy") == _current_month)
+                            {
+                                _retained = "Retained";
+                            }
+                            else
+                            {
+                                _retained = "Not Retained";
+                            }
+
+                            String month_get = DateTime.Now.Month.ToString();
+                            String year_get = DateTime.Now.Year.ToString();
+                            string year_month = year_get + "-" + month_get;
+
+                            if (_fd_date_.ToString("yyyy-M") == year_month)
+                            {
+                                _new = "New";
+                            }
+                            else
+                            {
+                                _new = "Not New";
+                            }
+
+                            if (Convert.ToDouble(_amount.ToString()) < 0)
+                            {
+                                _retained = "Not Retained";
+                            }
+
+                            if (_retained == "Not Retained" && _new == "Not New")
+                            {
+                                _reactivated = "Reactivated";
+                            }
+                            else
+                            {
+                                _reactivated = "Not Reactivated";
+                            }
                         }
-                        else if (_fd_date == _current_month || _ld_date == _last_month || _ld_date == _current_month)
+                        catch (Exception err)
                         {
-                            _retained = "Retained";
-                            _new = "Not New";
-                            _reactivated = "Not Reactivated";
-                        }
-                        else
-                        {
-                            _retained = "Not Retained";
-                            _new = "Not New";
-                            _reactivated = "Reactivated";
+                            SendMyBot(err.ToString());
                         }
                     }
                     else
@@ -1544,7 +1610,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -1594,7 +1660,7 @@ namespace CL_Cronos_Data
 
                     for (int i = 0; i < _jo_count.Count(); i++)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
                         __display_count++;
                         label_total_records.Text = __display_count.ToString("N0") + " of " + int.Parse(_jo_count_.ToString()).ToString("N0");
 
@@ -1840,7 +1906,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -1887,7 +1953,7 @@ namespace CL_Cronos_Data
 
                 for (int i = 0; i < _jo_count.Count(); i++)
                 {
-                    Application.DoEvents();
+                    //Application.DoEvents();
                     __display_count++;
                     label_total_records.Text = __display_count.ToString("N0") + " of " + int.Parse(_jo_count.Count().ToString()).ToString("N0");
 
@@ -2239,7 +2305,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -2290,7 +2356,7 @@ namespace CL_Cronos_Data
                     
                     for (int i = 0; i < _jo_count.Count(); i++)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
                         __display_count++;
                         label_total_records.Text = __display_count.ToString("N0") + " of " + int.Parse(_jo_count_.ToString()).ToString("N0");
 
@@ -2563,6 +2629,7 @@ namespace CL_Cronos_Data
 
                     __DATA.Clear();
                     __detect_header = false;
+                    __display_count = 0;
 
                     // BONUS SEND TO DATABASE
                     // AUTO START
@@ -2601,7 +2668,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -2654,7 +2721,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -2674,15 +2741,15 @@ namespace CL_Cronos_Data
                 case 1:
                 case 21:
                 case 31:
-                    return "Rebate for" + d.ToString(" dd'st' MMMM yyyy");
+                    return "Rebate for" + d.ToString(" d'st' MMMM yyyy");
                 case 2:
                 case 22:
-                    return "Rebate for" + d.ToString(" dd'nd' MMMM yyyy");
+                    return "Rebate for" + d.ToString(" d'nd' MMMM yyyy");
                 case 3:
                 case 23:
-                    return "Rebate for" + d.ToString(" dd'rd' MMMM yyyy");
+                    return "Rebate for" + d.ToString(" d'rd' MMMM yyyy");
                 default:
-                    return "Rebate for" + d.ToString(" dd'th' MMMM yyyy");
+                    return "Rebate for" + d.ToString(" d'th' MMMM yyyy");
             }
         }
 
@@ -2762,6 +2829,15 @@ namespace CL_Cronos_Data
                         {
                             //SendMyBot("Can't download Turnover Record at this moment.");
                             SendReportsTeam("Can't download Turnover Record at this moment.");
+                            if (_turnover_count != 3)
+                            {
+                                Properties.Settings.Default.______turnover = DateTime.Now.AddHours(2).ToString("yyyy-MM-dd HH");
+                                timer_turnover.Start();
+                            }
+                            else
+                            {
+                                _turnover_count = 0;
+                            }
 
                             Properties.Settings.Default.______start_detect = "5";
                             Properties.Settings.Default.Save();
@@ -2874,7 +2950,7 @@ namespace CL_Cronos_Data
                 {
                     if (i != 1)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
 
                         int count_ = 0;
                         string _member = "";
@@ -2977,6 +3053,7 @@ namespace CL_Cronos_Data
                         string _year_month = _year_ + "-" + _month_;
                         string _current_month = DateTime.Now.ToString("MM/dd/yyyy");
                         string _last_month = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+
                         if (_fd_date == _current_month)
                         {
                             _retained = "Not Retained";
@@ -3135,6 +3212,10 @@ namespace CL_Cronos_Data
                     File.Delete(_folder_path_result);
                 }
 
+                __DATA.Clear();
+                __detect_header = false;
+                __display_count = 0;
+
                 // TURNOVER SEND TO DATABASE
                 // AUTO START
 
@@ -3156,10 +3237,7 @@ namespace CL_Cronos_Data
                 {
                     panel_filter.Enabled = true;
                 }
-
-                __DATA.Clear();
-                __detect_header = false;
-                __display_count = 0;
+                
                 __send = 0;
             }
             catch (Exception err)
@@ -3223,7 +3301,7 @@ namespace CL_Cronos_Data
         }
         
         // BET -----
-        private async Task ___BETAsync(int index)
+        private async void ___BETAsync(int index)
         {
             try
             {
@@ -3261,7 +3339,7 @@ namespace CL_Cronos_Data
                     
                     for (int i = 0; i < _jo_count.Count(); i++)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
                         __display_count++;
                         label_total_records.Text = __display_count.ToString("N0");
 
@@ -3318,8 +3396,7 @@ namespace CL_Cronos_Data
                         __DATA.AppendLine(data);
                     }
 
-                    await ___BETAsync(__index_bet++);
-                    return;
+                    ___BETAsync(__index_bet++);
                 }
                 else
                 {
@@ -3463,12 +3540,12 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
                         ___WaitNSeconds(10);
-                        await ___BETAsync(__index_bet);
+                        ___BETAsync(__index_bet);
                     }
                 }
             }
@@ -3511,7 +3588,7 @@ namespace CL_Cronos_Data
                 {
                     for (int i = 0; i < _jo_count.Count(); i++)
                     {
-                        Application.DoEvents();
+                        //Application.DoEvents();
 
                         JToken _username = _jo.SelectToken("$.PageData[" + i + "].Account");
                         
@@ -3565,7 +3642,7 @@ namespace CL_Cronos_Data
                         //SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -3599,10 +3676,10 @@ namespace CL_Cronos_Data
                             count++;
                             label_getdatacount.Text = "VIP List: " + count.ToString("N0") + " of " + getcount.ToString("N0");
 
-                            Application.DoEvents();
+                            //Application.DoEvents();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                Application.DoEvents();
+                                //Application.DoEvents();
                                 if (i == 0)
                                 {
                                     columns += reader[i].ToString() + "*|*";
@@ -3632,7 +3709,7 @@ namespace CL_Cronos_Data
                     //SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -3665,10 +3742,10 @@ namespace CL_Cronos_Data
                             count++;
                             label_getdatacount.Text = "Affiliate List: " + count.ToString("N0") + " of " + getcount.ToString("N0");
 
-                            Application.DoEvents();
+                            //Application.DoEvents();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                Application.DoEvents();
+                                //Application.DoEvents();
                                 if (i == 0)
                                 {
                                     columns += reader[i].ToString() + "*|*";
@@ -3698,7 +3775,7 @@ namespace CL_Cronos_Data
                     //SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -3731,10 +3808,10 @@ namespace CL_Cronos_Data
                             count++;
                             label_getdatacount.Text = "Payment Method List: " + count.ToString("N0") + " of " + getcount.ToString("N0");
 
-                            Application.DoEvents();
+                            //Application.DoEvents();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                Application.DoEvents();
+                                //Application.DoEvents();
                                 if (i == 0)
                                 {
                                     columns += reader[i].ToString() + "*|*";
@@ -3768,7 +3845,7 @@ namespace CL_Cronos_Data
                     //SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -3801,10 +3878,10 @@ namespace CL_Cronos_Data
                             count++;
                             label_getdatacount.Text = "Bonus Code: " + count.ToString("N0") + " of " + getcount.ToString("N0");
 
-                            Application.DoEvents();
+                            //Application.DoEvents();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                Application.DoEvents();
+                                //Application.DoEvents();
                                 if (i == 0)
                                 {
                                     columns += reader[i].ToString() + "*|*";
@@ -3836,7 +3913,7 @@ namespace CL_Cronos_Data
                     //SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -3869,10 +3946,10 @@ namespace CL_Cronos_Data
                             count++;
                             label_getdatacount.Text = "Product Code: " + count.ToString("N0") + " of " + getcount.ToString("N0");
 
-                            Application.DoEvents();
+                            //Application.DoEvents();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                Application.DoEvents();
+                                //Application.DoEvents();
                                 if (i == 0)
                                 {
                                     columns += reader[i].ToString() + "*|*";
@@ -3908,7 +3985,7 @@ namespace CL_Cronos_Data
                     //SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -3963,7 +4040,7 @@ namespace CL_Cronos_Data
                     }
 
                     __is_close = false;
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -3974,7 +4051,7 @@ namespace CL_Cronos_Data
                         SendMyBot(err.ToString());
 
                         __is_close = false;
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -4036,7 +4113,7 @@ namespace CL_Cronos_Data
                         }
 
                         __is_close = false;
-                        Environment.Exit(0);
+                        //Environment.Exit(0);
                     }
                     else
                     {
@@ -4047,7 +4124,7 @@ namespace CL_Cronos_Data
                             SendMyBot(err.ToString());
 
                             __is_close = false;
-                            Environment.Exit(0);
+                            //Environment.Exit(0);
                         }
                         else
                         {
@@ -4091,7 +4168,7 @@ namespace CL_Cronos_Data
                     //SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
                 else
                 {
@@ -4271,7 +4348,19 @@ namespace CL_Cronos_Data
             DateTime _desired = DateTime.Now.AddSeconds(sec);
             while (DateTime.Now < _desired)
             {
-                Application.DoEvents();
+                //Application.DoEvents();
+            }
+        }
+
+        private int _turnover_count = 0;
+        private async void timer_turnover_TickAsync(object sender, EventArgs e)
+        {
+            DateTime today = DateTime.Now;
+            if (Properties.Settings.Default.______turnover == today.ToString("yyyy-MM-dd HH"))
+            {
+                _turnover_count++;
+                timer_turnover.Stop();
+                await ___TURNOVERAsync();
             }
         }
     }

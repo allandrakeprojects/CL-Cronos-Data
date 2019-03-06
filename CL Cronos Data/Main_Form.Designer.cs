@@ -90,6 +90,7 @@
             this.pictureBox_loader_loader = new System.Windows.Forms.PictureBox();
             this.panel_landing = new System.Windows.Forms.Panel();
             this.pictureBox_landing = new System.Windows.Forms.PictureBox();
+            this.timer_turnover = new System.Windows.Forms.Timer(this.components);
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -587,7 +588,6 @@
             this.label_cycle_in.Name = "label_cycle_in";
             this.label_cycle_in.Size = new System.Drawing.Size(147, 27);
             this.label_cycle_in.TabIndex = 1;
-            this.label_cycle_in.Text = "-";
             this.label_cycle_in.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label_cycle_in.Visible = false;
             // 
@@ -763,6 +763,11 @@
             this.pictureBox_landing.TabIndex = 0;
             this.pictureBox_landing.TabStop = false;
             // 
+            // timer_turnover
+            // 
+            this.timer_turnover.Interval = 1000;
+            this.timer_turnover.Tick += new System.EventHandler(this.timer_turnover_TickAsync);
+            // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -871,5 +876,6 @@
         private System.Windows.Forms.Panel panel_landing;
         private System.Windows.Forms.PictureBox pictureBox_landing;
         private System.Windows.Forms.Panel panel_cefsharp;
+        private System.Windows.Forms.Timer timer_turnover;
     }
 }
