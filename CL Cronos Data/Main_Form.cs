@@ -4188,7 +4188,7 @@ namespace CL_Cronos_Data
 
         void ___CloseMessageBox()
         {
-            IntPtr windowPtr = FindWindowByCaption(IntPtr.Zero, "Message from webpage");
+            IntPtr windowPtr = FindWindowByCaption(IntPtr.Zero, "JavaScript Alert - " + __root_url);
 
             if (windowPtr == IntPtr.Zero)
             {
