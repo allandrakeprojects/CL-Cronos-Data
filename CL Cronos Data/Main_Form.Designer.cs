@@ -765,6 +765,7 @@
             // 
             // timer_turnover
             // 
+            this.timer_turnover.Enabled = true;
             this.timer_turnover.Interval = 1000;
             this.timer_turnover.Tick += new System.EventHandler(this.timer_turnover_TickAsync);
             // 

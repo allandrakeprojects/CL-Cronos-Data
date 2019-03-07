@@ -26,12 +26,12 @@ namespace CL_Cronos_Data.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ______midnight_time {
+        public string ______autostart_time {
             get {
-                return ((string)(this["______midnight_time"]));
+                return ((string)(this["______autostart_time"]));
             }
             set {
-                this["______midnight_time"] = value;
+                this["______autostart_time"] = value;
             }
         }
         
