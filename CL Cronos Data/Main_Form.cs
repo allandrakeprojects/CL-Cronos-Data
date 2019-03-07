@@ -304,7 +304,7 @@ namespace CL_Cronos_Data
                         panel_loader.Visible = false;
                         label_navigate_up.Enabled = false;
 
-                        //SendITSupport("The application have been logout, please re-login again.");
+                        SendITSupport("The application have been logout, please re-login again.");
                         SendMyBot("The application have been logout, please re-login again.");
                         __send = 0;
                     }));
@@ -436,7 +436,7 @@ namespace CL_Cronos_Data
         //                        label_navigate_up.Enabled = false;
 
         //                        // comment
-        //                        //SendITSupport("The application have been logout, please re-login again.");
+        //                        SendITSupport("The application have been logout, please re-login again.");
         //                        SendMyBot("The application have been logout, please re-login again.");
         //                        __send = 0;
         //                    }
@@ -527,7 +527,7 @@ namespace CL_Cronos_Data
         //            catch (Exception err)
         //            {
         //                // comment
-        //                //SendITSupport("There's a problem to the server, please re-open the application.");
+        //                SendITSupport("There's a problem to the server, please re-open the application.");
         //                SendMyBot(err.ToString());
 
         //                Environment.Exit(0);
@@ -843,7 +843,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
                         
                         Environment.Exit(0);
@@ -1140,7 +1140,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -1584,7 +1584,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -1881,7 +1881,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -2256,7 +2256,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -2619,7 +2619,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -2672,7 +2672,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -3536,7 +3536,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -3638,7 +3638,7 @@ namespace CL_Cronos_Data
                     if (__send == 5)
                     {
                         // comment
-                        //SendITSupport("There's a problem to the server, please re-open the application.");
+                        SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
                         Environment.Exit(0);
@@ -3705,7 +3705,7 @@ namespace CL_Cronos_Data
                 if (__send == 5)
                 {
                     // comment
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
                     Environment.Exit(0);
@@ -3771,7 +3771,7 @@ namespace CL_Cronos_Data
                 if (__send == 5)
                 {
                     // comment
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
                     Environment.Exit(0);
@@ -3841,7 +3841,7 @@ namespace CL_Cronos_Data
                 if (__send == 5)
                 {
                     // comment
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
                     Environment.Exit(0);
@@ -3909,7 +3909,7 @@ namespace CL_Cronos_Data
                 if (__send == 5)
                 {
                     // comment
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
                     Environment.Exit(0);
@@ -3981,7 +3981,7 @@ namespace CL_Cronos_Data
                 if (__send == 5)
                 {
                     // comment
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
                     Environment.Exit(0);
@@ -4164,7 +4164,7 @@ namespace CL_Cronos_Data
                 __send++;
                 if (__send == 5)
                 {
-                    //SendITSupport("There's a problem to the server, please re-open the application.");
+                    SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
                     Environment.Exit(0);
