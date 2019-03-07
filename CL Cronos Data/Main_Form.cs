@@ -667,24 +667,6 @@ namespace CL_Cronos_Data
                 {
                     label_cycle_in.Text = timeRemaining.Minutes + " min(s) " + timeRemaining.Seconds + " sec(s)";
                 }
-
-                if (Properties.Settings.Default.______autostart_time != "")
-                {
-                    if (label_cycle_in.Text.Contains("-"))
-                    {
-                        panel_cl.Enabled = false;
-
-                        DateTime today = DateTime.Now;
-                        DateTime date = today.AddDays(1);
-                        Properties.Settings.Default.______autostart_time = date.ToString("yyyy-MM-dd 12:30");
-                        Properties.Settings.Default.______start_detect = "1";
-                        Properties.Settings.Default.Save();
-                    }
-                    else
-                    {
-                        panel_cl.Enabled = true;
-                    }
-                }
             }
         }
 
