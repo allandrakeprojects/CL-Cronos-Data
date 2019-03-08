@@ -667,6 +667,24 @@ namespace CL_Cronos_Data
                 {
                     label_cycle_in.Text = timeRemaining.Minutes + " min(s) " + timeRemaining.Seconds + " sec(s)";
                 }
+
+                if (label_cycle_in.Text.Contains("-") && label_cycle_in.Text.Contains("min"))
+                {
+                    panel_cl.Enabled = false;
+
+                    DateTime today = DateTime.Now;
+                    DateTime date = today.AddDays(1);
+                    Properties.Settings.Default.______autostart_time = date.ToString("yyyy-MM-dd 12:30");
+                    Properties.Settings.Default.______start_detect = "1";
+                    Properties.Settings.Default.Save();
+                }
+                else
+                {
+                    if (label_getdatacount.Visible == false)
+                    {
+                        panel_cl.Enabled = true;
+                    }
+                }
             }
         }
 
@@ -4247,6 +4265,7 @@ namespace CL_Cronos_Data
                         __index_bon = 1;
                         __index_bet = 1;
                         __display_count = 0;
+                        label_getdatacount.Visible = true;
                         __getdata_viplist.Clear();
                         __getdata_affiliatelist.Clear();
                         __getdata_paymentmethodlist.Clear();
@@ -4264,48 +4283,6 @@ namespace CL_Cronos_Data
                         comboBox_list.SelectedIndex = 0;
                         button_start.Enabled = true;
                         button_start.PerformClick();
-                    }
-                }
-                else
-                {
-                    string start_datetime = today.ToString("yyyy-MM-dd HH:mm");
-                    DateTime start = DateTime.ParseExact(start_datetime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-
-                    string end_datetime = Properties.Settings.Default.______autostart_time;
-                    DateTime end = DateTime.ParseExact(end_datetime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-
-                    if (start > end)
-                    {
-                        if (Properties.Settings.Default.______start_detect == "0")
-                        {
-                            Properties.Settings.Default.______autostart_time = "";
-                            Properties.Settings.Default.Save();
-
-                            __DATA.Clear();
-                            __conn_id = "";
-                            __index_reg = 1;
-                            __index_dep = 1;
-                            __index_bon = 1;
-                            __index_bet = 1;
-                            __display_count = 0;
-                            __getdata_viplist.Clear();
-                            __getdata_affiliatelist.Clear();
-                            __getdata_paymentmethodlist.Clear();
-                            __getdata_bonuscode.Clear();
-                            __getdata_productcode.Clear();
-                            __DATA.Clear();
-                            ___GETDATA_VIPLIST();
-                            ___GETDATA_AFFIALIATELIST();
-                            ___GETDATA_PAYMENTMETHODLIST();
-                            ___GETDATA_BONUSCODE();
-                            ___GETDATA_PRODUCTCODE();
-                            Properties.Settings.Default.______start_detect = "1";
-                            Properties.Settings.Default.Save();
-                            comboBox_list.SelectedIndex = 1;
-                            comboBox_list.SelectedIndex = 0;
-                            button_start.Enabled = true;
-                            button_start.PerformClick();
-                        }
                     }
                 }
             }
