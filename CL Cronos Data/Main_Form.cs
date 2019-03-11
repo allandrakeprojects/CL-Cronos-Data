@@ -3544,6 +3544,8 @@ namespace CL_Cronos_Data
                     }
                 }
 
+                label_status.Text = "Waiting";
+                
                 __send = 0;
             }
             catch (Exception err)
