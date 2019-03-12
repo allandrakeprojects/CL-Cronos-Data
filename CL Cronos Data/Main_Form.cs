@@ -1202,8 +1202,16 @@ namespace CL_Cronos_Data
             JToken _email = _jo.SelectToken("$.Member.Email").ToString();
             // ----- WeChat
             JToken _wechat = _jo.SelectToken("$.Member.IdNumber").ToString();
+            if (_wechat.ToString() == "")
+            {
+                _wechat = "";
+            }
             // ----- QQ
             JToken _qq = _jo.SelectToken("$.Member.QQ").ToString();
+            if (_qq.ToString() == "")
+            {
+                _qq = "";
+            }
             // ----- Last Login Date
             JToken _last_login_date_detect = _jo.SelectToken("$.Member.LatestLogin").ToString();
             JToken _last_login_date = "";
@@ -1580,7 +1588,7 @@ namespace CL_Cronos_Data
                         _fd_date = "";
                     }
                        
-                    if (__display_count == 1)
+                    if (_display_count == 1)
                     {
                         __detect_header = true;
                         var header = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", "Brand", "Month", "Date", "Transaction #", "Username", "VIP", "Submit Time", "Amount", "Status", "Update Time", "Payment Method", "PG Company", "PG Type", "Duration", "Process Duration", "Transaction Type", "Memo", "FD Date", "New", "Retained", "Reactivated");
@@ -1870,7 +1878,7 @@ namespace CL_Cronos_Data
                         }
                         else
                         {
-                            if (__display_count == 1)
+                            if (_display_count == 1)
                             {
                                 __detect_header = true;
                                 var header = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", "Brand", "Month", "Date", "Transaction #", "Username", "VIP", "Submit Time", "Amount", "Status", "Update Time", "Payment Method", "PG Company", "PG Type", "Duration", "Process Duration", "Transaction Type", "Memo", "FD Date", "New", "Retained", "Reactivated");
@@ -2132,17 +2140,17 @@ namespace CL_Cronos_Data
 
                     if (__detect_header)
                     {
-                        var data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", __brand_code, "\"" + _month + "\"", "\"" + _date + "\"", "\"" + _transaction_num + "\"", "\"" + _username + "\"", "\"" + _vip + "\"", "\"" + _submitted_time + "\"", "\"" + _amount + "\"", "\"" + _status + "\"", "\"" + _updated_time + "\"", "\"" + _payment_method + "\"", "\"" + _pg_company + "\"", "\"" + _pg_type + "\"", "\"" + _duration + "\"", "\"" + _process_duration + "\"", "\"" + "Withdrawal" + "\"", "\"" + _memo + "\"", "\"" + _fd_date + "\"", "\"" + _new + "\"", "\"" + _retained + "\"", "\"" + _reactivated + "\"");
+                        var data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", __brand_code, "\"" + _month + "\"", "\"" + _date + "\"", "\"" + _transaction_num + "\"", "\"" + _username + "\"", "\"" + _vip + "\"", "\"" + _submitted_time + "\"", "\"" + _amount + "\"", "\"" + _status + "\"", "\"" + _updated_time + "\"", "\"" + _payment_method + "\"", "\"" + _pg_company + "\"", "\"" + _pg_type + "\"", "\"" + _duration + "\"", "\"" + _process_duration + "\"", "\"" + "Withdrawal" + "\"", "\"" + "" + "\"", "\"" + _fd_date + "\"", "\"" + _new + "\"", "\"" + _retained + "\"", "\"" + _reactivated + "\"");
                         __DATA.AppendLine(data);
                     }
                     else
                     {
-                        if (__display_count == 1)
+                        if (_display_count == 1)
                         {
                             var header = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", "Brand", "Month", "Date", "Transaction #", "Username", "VIP", "Submit Time", "Amount", "Status", "Update Time", "Payment Method", "PG Company", "PG Type", "Duration", "Process Duration", "Transaction Type", "Memo", "FD Date", "New", "Retained", "Reactivated");
                             __DATA.AppendLine(header);
                         }
-                        var data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", __brand_code, "\"" + _month + "\"", "\"" + _date + "\"", "\"" + _transaction_num + "\"", "\"" + _username + "\"", "\"" + _vip + "\"", "\"" + _submitted_time + "\"", "\"" + _amount + "\"", "\"" + _status + "\"", "\"" + _updated_time + "\"", "\"" + _payment_method + "\"", "\"" + _pg_company + "\"", "\"" + _pg_type + "\"", "\"" + _duration + "\"", "\"" + _process_duration + "\"", "\"" + "Withdrawal" + "\"", "\"" + _memo + "\"", "\"" + _fd_date + "\"", "\"" + _new + "\"", "\"" + _retained + "\"", "\"" + _reactivated + "\"");
+                        var data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}", __brand_code, "\"" + _month + "\"", "\"" + _date + "\"", "\"" + _transaction_num + "\"", "\"" + _username + "\"", "\"" + _vip + "\"", "\"" + _submitted_time + "\"", "\"" + _amount + "\"", "\"" + _status + "\"", "\"" + _updated_time + "\"", "\"" + _payment_method + "\"", "\"" + _pg_company + "\"", "\"" + _pg_type + "\"", "\"" + _duration + "\"", "\"" + _process_duration + "\"", "\"" + "Withdrawal" + "\"", "\"" + "" + "\"", "\"" + _fd_date + "\"", "\"" + _new + "\"", "\"" + _retained + "\"", "\"" + _reactivated + "\"");
                         __DATA.AppendLine(data);
                     }
                 }
@@ -2393,8 +2401,8 @@ namespace CL_Cronos_Data
                                         string get3 = get1.Substring(2);
                                         string get4 = get1.Substring(0, 2);
 
-                                        ArrayList items_code = new ArrayList(new string[] { "AD", "FD", "FDB", "DP", "PZ", "RF", "RAF", "RB", "SU", "TO", "RR", "CB", "GW", "RW", "TE" });
-                                        ArrayList items_bonus_category = new ArrayList(new string[] { "Adjustment", "FDB", "FDB", "Deposit", "Prize", "Refer friend", "Refer friend", "Reload", "Signup Bonus", "Turnover", "Rebate", "Cashback", "Goodwill Bonus", "Reward", "Test" });
+                                        ArrayList items_code = new ArrayList(new string[] { "AD", "FD", "FDB", "FB", "DP", "PZ", "RF", "RAF", "RB", "SU", "TO", "RR", "CB", "GW", "RW", "TE" });
+                                        ArrayList items_bonus_category = new ArrayList(new string[] { "Adjustment", "FDB", "FDB", "Freebet", "Deposit", "Prize", "Refer friend", "Refer friend", "Reload", "Signup Bonus", "Turnover", "Rebate", "Cashback", "Goodwill Bonus", "Reward", "Test" });
                                         int count_ = 0;
                                         foreach (var item in items_code)
                                         {
