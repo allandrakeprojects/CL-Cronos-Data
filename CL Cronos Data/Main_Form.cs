@@ -1245,52 +1245,121 @@ namespace CL_Cronos_Data
             return _phone + "|" + _email + "|" + _wechat + "|" + _qq + "|" + _last_login_date + "|" + _jo_affiliate;
         }
 
+        List<string> __getdata_fdld = new List<string>();
         private async Task<string> ___REGISTRATION_FIRSTLASTDEPOSITAsync(string username)
         {
-            var cookie_manager = Cef.GetGlobalCookieManager();
-            var visitor = new CookieCollector();
-            cookie_manager.VisitUrlCookies(__url, true, visitor);
-            var cookies = await visitor.Task;
-            var cookie = CookieCollector.GetCookieHeader(cookies);
-            WebClient wc = new WebClient();
-
-            wc.Headers.Add("Cookie", cookie);
-            wc.Encoding = Encoding.UTF8;
-            wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-            wc.Headers["X-Requested-With"] = "XMLHttpRequest";
-
-            var reqparm = new NameValueCollection
+            if (__getdata_fdld.Count == 0)
             {
-                {"Account", username},
-                {"AmountBegin", "0"},
-                {"IsReal", "true"},
-            };
+                var cookie_manager = Cef.GetGlobalCookieManager();
+                var visitor = new CookieCollector();
+                cookie_manager.VisitUrlCookies(__url, true, visitor);
+                var cookies = await visitor.Task;
+                var cookie = CookieCollector.GetCookieHeader(cookies);
+                WebClient wc = new WebClient();
 
-            byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/MemberTransaction/Search", "POST", reqparm);
-            string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
-            var deserialize_object = JsonConvert.DeserializeObject(responsebody);
-            JObject _jo = JObject.Parse(deserialize_object.ToString());
-            JToken _jo_count = _jo.SelectToken("$.PageData");
-            JToken _fd_date = "";
-            JToken _ld_date = "";
-            string _month = "";
-            if (_jo_count.Count() > 0)
-            {
-                _fd_date = _jo.SelectToken("$.PageData[" + (_jo_count.Count()-1) + "].Time").ToString();
-                _fd_date = _fd_date.ToString().Replace("/TestDate(", "");
-                _fd_date = _fd_date.ToString().Replace(")/", "");
-                DateTime _fd_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_fd_date.ToString()) / 1000d)).ToLocalTime();
-                _fd_date = _fd_date_replace.ToString("MM/dd/yyyy");
-                _month = _fd_date_replace.ToString("MM/1/yyyy");
-                
-                _ld_date = _jo.SelectToken("$.PageData[0].Time").ToString();
-                _ld_date = _ld_date.ToString().Replace("/TestDate(", "");
-                _ld_date = _ld_date.ToString().Replace(")/", "");
-                DateTime _ld_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_ld_date.ToString()) / 1000d)).ToLocalTime();
-                _ld_date = _ld_date_replace.ToString("MM/dd/yyyy");
+                wc.Headers.Add("Cookie", cookie);
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                wc.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+                var reqparm = new NameValueCollection
+                {
+                    {"Account", username},
+                    {"AmountBegin", "0"},
+                    {"IsReal", "true"},
+                };
+
+                byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/MemberTransaction/Search", "POST", reqparm);
+                string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
+                var deserialize_object = JsonConvert.DeserializeObject(responsebody);
+                JObject _jo = JObject.Parse(deserialize_object.ToString());
+                JToken _jo_count = _jo.SelectToken("$.PageData");
+                JToken _fd_date = "";
+                JToken _ld_date = "";
+                string _month = "";
+                if (_jo_count.Count() > 0)
+                {
+                    _fd_date = _jo.SelectToken("$.PageData[" + (_jo_count.Count() - 1) + "].Time").ToString();
+                    _fd_date = _fd_date.ToString().Replace("/TestDate(", "");
+                    _fd_date = _fd_date.ToString().Replace(")/", "");
+                    DateTime _fd_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_fd_date.ToString()) / 1000d)).ToLocalTime();
+                    _fd_date = _fd_date_replace.ToString("MM/dd/yyyy");
+                    _month = _fd_date_replace.ToString("MM/1/yyyy");
+
+                    _ld_date = _jo.SelectToken("$.PageData[0].Time").ToString();
+                    _ld_date = _ld_date.ToString().Replace("/TestDate(", "");
+                    _ld_date = _ld_date.ToString().Replace(")/", "");
+                    DateTime _ld_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_ld_date.ToString()) / 1000d)).ToLocalTime();
+                    _ld_date = _ld_date_replace.ToString("MM/dd/yyyy");
+                }
+
+                __getdata_fdld.Add(username + "|" + _fd_date + "|" + _ld_date + "|" + _month);
+                return _fd_date + "|" + _ld_date + "|" + _month;
             }
-            
-            return _fd_date + "|" + _ld_date + "|" + _month;
+            else
+            {
+                bool _is_search = false;
+                for (var i = 0; i < __getdata_fdld.Count; i++)
+                {
+                    string[] __getdata_fdld_replace = __getdata_fdld[i].Split('|');
+                    if (__getdata_fdld_replace[0] == username)
+                    {
+                        _is_search = true;
+                        return __getdata_fdld_replace[1] + "|" + __getdata_fdld_replace[2] + "|" + __getdata_fdld_replace[3];
+                    }
+                }
+
+                if (!_is_search)
+                {
+                    var cookie_manager = Cef.GetGlobalCookieManager();
+                    var visitor = new CookieCollector();
+                    cookie_manager.VisitUrlCookies(__url, true, visitor);
+                    var cookies = await visitor.Task;
+                    var cookie = CookieCollector.GetCookieHeader(cookies);
+                    WebClient wc = new WebClient();
+
+                    wc.Headers.Add("Cookie", cookie);
+                    wc.Encoding = Encoding.UTF8;
+                    wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                    wc.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+                    var reqparm = new NameValueCollection
+                    {
+                        {"Account", username},
+                        {"AmountBegin", "0"},
+                        {"IsReal", "true"},
+                    };
+
+                    byte[] result = await wc.UploadValuesTaskAsync(__root_url + "/MemberTransaction/Search", "POST", reqparm);
+                    string responsebody = Encoding.UTF8.GetString(result).Replace("Date", "TestDate");
+                    var deserialize_object = JsonConvert.DeserializeObject(responsebody);
+                    JObject _jo = JObject.Parse(deserialize_object.ToString());
+                    JToken _jo_count = _jo.SelectToken("$.PageData");
+                    JToken _fd_date = "";
+                    JToken _ld_date = "";
+                    string _month = "";
+                    if (_jo_count.Count() > 0)
+                    {
+                        _fd_date = _jo.SelectToken("$.PageData[" + (_jo_count.Count() - 1) + "].Time").ToString();
+                        _fd_date = _fd_date.ToString().Replace("/TestDate(", "");
+                        _fd_date = _fd_date.ToString().Replace(")/", "");
+                        DateTime _fd_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_fd_date.ToString()) / 1000d)).ToLocalTime();
+                        _fd_date = _fd_date_replace.ToString("MM/dd/yyyy");
+                        _month = _fd_date_replace.ToString("MM/1/yyyy");
+
+                        _ld_date = _jo.SelectToken("$.PageData[0].Time").ToString();
+                        _ld_date = _ld_date.ToString().Replace("/TestDate(", "");
+                        _ld_date = _ld_date.ToString().Replace(")/", "");
+                        DateTime _ld_date_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(_ld_date.ToString()) / 1000d)).ToLocalTime();
+                        _ld_date = _ld_date_replace.ToString("MM/dd/yyyy");
+                    }
+
+                    __getdata_fdld.Add(username + "|" + _fd_date + "|" + _ld_date + "|" + _month);
+                    return _fd_date + "|" + _ld_date + "|" + _month;
+                }
+            }
+
+            return null;
         }
 
         // PAYMENT -----
@@ -3550,6 +3619,8 @@ namespace CL_Cronos_Data
                     {
                         panel_filter.Enabled = true;
                     }
+
+                    __getdata_fdld.Clear();
                 }
 
                 label_status.Text = "Waiting";
@@ -3622,7 +3693,7 @@ namespace CL_Cronos_Data
                         if (__username_detect.Count > 0)
                         {
                             bool _detect = false;
-                            foreach (string username in __username_detect) // Loop through List with foreach
+                            foreach (string username in __username_detect)
                             {
                                 if (_username.ToString() == username)
                                 {
