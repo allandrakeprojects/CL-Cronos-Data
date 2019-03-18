@@ -1414,7 +1414,7 @@ namespace CL_Cronos_Data
                     string _submitted_date_duration = "";
                     _date = _date.ToString().Replace("/TestDate(", "");
                     _date = _date.ToString().Replace(")/", "");
-                    DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                    DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                     _date = _date_replace.ToString("MM/dd/yyyy");
                     _submitted_time = _date_replace.ToString("hh:mm:ss tt");
                     _submitted_date_duration = _date_replace.ToString("yyyy-MM-dd HH:mm:ss");
@@ -1448,7 +1448,7 @@ namespace CL_Cronos_Data
                     {
                         _updated_time = _updated_time.ToString().Replace("/TestDate(", "");
                         _updated_time = _updated_time.ToString().Replace(")/", "");
-                        DateTime _updated_time_replace = DateTime.ParseExact(_updated_time.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                        DateTime _updated_time_replace = DateTime.ParseExact(_updated_time.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                         _updated_time = _updated_time_replace.ToString("hh:mm:ss tt");
                         _updated_date_duration = _updated_time_replace.ToString("yyyy-MM-dd HH:mm:ss");
                     }
@@ -1747,7 +1747,7 @@ namespace CL_Cronos_Data
                         string _submitted_date_duration = "";
                         _date = _date.ToString().Replace("/TestDate(", "");
                         _date = _date.ToString().Replace(")/", "");
-                        DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                        DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                         _date = _date_replace.ToString("MM/dd/yyyy");
                         _submitted_time = _date_replace.ToString("hh:mm:ss tt");
                         _submitted_date_duration = _date_replace.ToString("yyyy-MM-dd HH:mm:ss");
@@ -1781,7 +1781,7 @@ namespace CL_Cronos_Data
                         {
                             _updated_time = _updated_time.ToString().Replace("/TestDate(", "");
                             _updated_time = _updated_time.ToString().Replace(")/", "");
-                            DateTime _updated_time_replace = DateTime.ParseExact(_updated_time.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                            DateTime _updated_time_replace = DateTime.ParseExact(_updated_time.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                             _updated_time = _updated_time_replace.ToString("hh:mm:ss tt");
                             _updated_date_duration = _updated_time_replace.ToString("yyyy-MM-dd HH:mm:ss");
                         }
@@ -2041,7 +2041,7 @@ namespace CL_Cronos_Data
                     string _submitted_date_duration = "";
                     _date = _date.ToString().Replace("/TestDate(", "");
                     _date = _date.ToString().Replace(")/", "");
-                    DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                    DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                     _date = _date_replace.ToString("MM/dd/yyyy");
                     _submitted_time = _date_replace.ToString("hh:mm:ss tt");
                     _submitted_date_duration = _date_replace.ToString("yyyy-MM-dd HH:mm:ss");
@@ -2075,7 +2075,7 @@ namespace CL_Cronos_Data
                     {
                         _updated_time = _updated_time.ToString().Replace("/TestDate(", "");
                         _updated_time = _updated_time.ToString().Replace(")/", "");
-                        DateTime _updated_time_replace = DateTime.ParseExact(_updated_time.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                        DateTime _updated_time_replace = DateTime.ParseExact(_updated_time.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                         _updated_time = _updated_time_replace.ToString("hh:mm:ss tt");
                         _updated_date_duration = _updated_time_replace.ToString("yyyy-MM-dd HH:mm:ss");
                     }
@@ -2418,7 +2418,7 @@ namespace CL_Cronos_Data
                         string _submitted_date_duration = "";
                         _date = _date.ToString().Replace("/TestDate(", "");
                         _date = _date.ToString().Replace(")/", "");
-                        DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                        DateTime _date_replace = DateTime.ParseExact(_date.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                         _date = _date_replace.ToString("MM/dd/yyyy");
                         _transaction_time = _date_replace.ToString("hh:mm:ss tt");
                         _month = _date_replace.ToString("MMM-dd");
@@ -3451,7 +3451,7 @@ namespace CL_Cronos_Data
                         {
                             _bet_time = _bet_time.ToString().Replace("/TestDate(", "");
                             _bet_time = _bet_time.ToString().Replace(")/", "");
-                            DateTime _bet_time_replace = DateTime.ParseExact(_bet_time.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                            DateTime _bet_time_replace = DateTime.ParseExact(_bet_time.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                             _bet_time = _bet_time_replace.ToString("yyyy/MM/dd HH:mm:ss");
                             _bet_date = _bet_time_replace.ToString("yyyy-MM-dd");
                         }
@@ -3466,7 +3466,7 @@ namespace CL_Cronos_Data
                         {
                             _win_loss_time = _win_loss_time.ToString().Replace("/TestDate(", "");
                             _win_loss_time = _win_loss_time.ToString().Replace(")/", "");
-                            DateTime _win_loss_time_replace = DateTime.ParseExact(_win_loss_time.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
+                            DateTime _win_loss_time_replace = DateTime.ParseExact(_win_loss_time.ToString(), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).AddHours(20);
                             _win_loss_time = _win_loss_time_replace.ToString("yyyy/MM/dd HH:mm:ss");
                             _win_loss_date = _win_loss_time_replace.ToString("yyyy-MM-dd");
                         }
