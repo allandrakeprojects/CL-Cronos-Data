@@ -91,6 +91,7 @@
             this.panel_landing = new System.Windows.Forms.Panel();
             this.pictureBox_landing = new System.Windows.Forms.PictureBox();
             this.timer_turnover = new System.Windows.Forms.Timer(this.components);
+            this.timer_detect_running = new System.Windows.Forms.Timer(this.components);
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -769,6 +770,12 @@
             this.timer_turnover.Interval = 1000;
             this.timer_turnover.Tick += new System.EventHandler(this.timer_turnover_TickAsync);
             // 
+            // timer_detect_running
+            // 
+            this.timer_detect_running.Enabled = true;
+            this.timer_detect_running.Interval = 60000;
+            this.timer_detect_running.Tick += new System.EventHandler(this.timer_detect_running_Tick);
+            // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -878,5 +885,6 @@
         private System.Windows.Forms.PictureBox pictureBox_landing;
         private System.Windows.Forms.Panel panel_cefsharp;
         private System.Windows.Forms.Timer timer_turnover;
+        private System.Windows.Forms.Timer timer_detect_running;
     }
 }
