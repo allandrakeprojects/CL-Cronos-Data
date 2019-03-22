@@ -3336,6 +3336,8 @@ namespace CL_Cronos_Data
                 {
                     __turnover_detect = false;
                     SendReportsTeam("Turnover Record Completed.");
+
+                    label_status.Text = "Waiting";
                 }
             }
             catch (Exception err)
@@ -4421,6 +4423,7 @@ namespace CL_Cronos_Data
                 {
                     __turnover_detect = true;
                     timer_turnover.Stop();
+                    label_status.Text = "TO Running";
                     await ___TURNOVERAsync();
                 }
                 else
