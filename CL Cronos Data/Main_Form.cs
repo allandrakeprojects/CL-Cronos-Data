@@ -47,7 +47,6 @@ namespace CL_Cronos_Data
         private bool __is_start = false;
         private bool __is_autostart = true;
         private bool __detect_header = false;
-        private bool __is_send = false;
         private JObject __jo;
         private JToken __jo_count;
         private JToken __conn_id = "";
@@ -222,6 +221,22 @@ namespace CL_Cronos_Data
             }
         }
 
+        private void Main_Form_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!__is_close)
+            {
+                DialogResult dr = MessageBox.Show("Exit the program?", __brand_code + " Cronos Data", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            }
+        }
+
         private void panel_cl_Paint(object sender, PaintEventArgs e)
         {
             Rectangle rect = panel_cl.ClientRectangle;
@@ -239,7 +254,6 @@ namespace CL_Cronos_Data
             }
             
             __detect_navigate = true;
-            // comment
             panel_landing.Visible = false;
             label_title.Visible = true;
             panel.Visible = true;
@@ -308,6 +322,12 @@ namespace CL_Cronos_Data
                         SendITSupport("The application have been logout, please re-login again.");
                         SendMyBot("The application have been logout, please re-login again.");
                         __send = 0;
+
+                        if (!Properties.Settings.Default.______is_send_telegram)
+                        {
+                            __is_close = false;
+                            Environment.Exit(0);
+                        }
                     }));
                 }
 
@@ -430,13 +450,11 @@ namespace CL_Cronos_Data
         //                        label_page_count.Visible = false;
         //                        label_total_records.Visible = false;
         //                        button_start.Visible = false;
-        //                        // comment
         //                        __mainform_handler = Application.OpenForms[0];
         //                        __mainform_handler.Size = new Size(569, 514);
         //                        panel_loader.Visible = false;
         //                        label_navigate_up.Enabled = false;
-
-        //                        // comment
+        
         //                        SendITSupport("The application have been logout, please re-login again.");
         //                        SendMyBot("The application have been logout, please re-login again.");
         //                        __send = 0;
@@ -456,7 +474,6 @@ namespace CL_Cronos_Data
         //                    label_page_count.Visible = true;
         //                    label_total_records.Visible = true;
         //                    button_start.Visible = true;
-        //                    // comment
         //                    __mainform_handler = Application.OpenForms[0];
         //                    __mainform_handler.Size = new Size(569, 208);
         //                    panel_loader.Visible = true;
@@ -527,10 +544,11 @@ namespace CL_Cronos_Data
         //            }
         //            catch (Exception err)
         //            {
-        //                // comment
         //                SendITSupport("There's a problem to the server, please re-open the application.");
         //                SendMyBot(err.ToString());
 
+
+        //                __is_close = false;
         //                Environment.Exit(0);
         //            }
         //        }
@@ -861,10 +879,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        
+
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -1158,10 +1176,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -1679,10 +1697,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -1959,8 +1977,15 @@ namespace CL_Cronos_Data
                         }
                     }
 
-                    await ___PAYMENT_DEPOSITMANUALAsync(__index_dep++);
-                    return;
+                    if (__index_dep == 1 && _jo_count.Count() < 10)
+                    {
+                        await ___PAYMENT_WITHDRAWALAsync();
+                    }
+                    else
+                    {
+                        await ___PAYMENT_DEPOSITMANUALAsync(__index_dep++);
+                        return;
+                    }
                 }
                 else
                 {
@@ -1976,10 +2001,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -2351,10 +2376,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -2714,10 +2739,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -3611,10 +3636,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -3713,10 +3738,10 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
-                        // comment
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -3780,10 +3805,10 @@ namespace CL_Cronos_Data
                 __send++;
                 if (__send == 5)
                 {
-                    // comment
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
@@ -3846,10 +3871,10 @@ namespace CL_Cronos_Data
                 __send++;
                 if (__send == 5)
                 {
-                    // comment
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
@@ -3916,10 +3941,10 @@ namespace CL_Cronos_Data
                 __send++;
                 if (__send == 5)
                 {
-                    // comment
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
@@ -3984,10 +4009,10 @@ namespace CL_Cronos_Data
                 __send++;
                 if (__send == 5)
                 {
-                    // comment
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
@@ -4056,10 +4081,10 @@ namespace CL_Cronos_Data
                 __send++;
                 if (__send == 5)
                 {
-                    // comment
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
@@ -4139,7 +4164,7 @@ namespace CL_Cronos_Data
 
         private void SendITSupport(string message)
         {
-            if (__is_send)
+            if (Properties.Settings.Default.______is_send_telegram)
             {
                 try
                 {
@@ -4243,6 +4268,7 @@ namespace CL_Cronos_Data
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
 
+                    __is_close = false;
                     Environment.Exit(0);
                 }
                 else
@@ -4364,14 +4390,16 @@ namespace CL_Cronos_Data
 
         private void panel_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (__is_send)
+            if (Properties.Settings.Default.______is_send_telegram)
             {
-                __is_send = false;
+                Properties.Settings.Default.______is_send_telegram = false;
+                Properties.Settings.Default.Save();
                 MessageBox.Show("Telegram Notification is Disabled.", __brand_code + " " + __app, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                __is_send = true;
+                Properties.Settings.Default.______is_send_telegram = true;
+                Properties.Settings.Default.Save();
                 MessageBox.Show("Telegram Notification is Enabled.", __brand_code + " " + __app, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -4460,6 +4488,7 @@ namespace CL_Cronos_Data
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
@@ -4507,6 +4536,7 @@ namespace CL_Cronos_Data
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
 
+                        __is_close = false;
                         Environment.Exit(0);
                     }
                     else
