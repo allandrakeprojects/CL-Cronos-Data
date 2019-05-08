@@ -25,7 +25,7 @@ namespace CL_Cronos_Data
 {
     public partial class Main_Form : Form
     {
-        private string __root_url = "http://sn.gk001.gpkbk456.com";
+        private string __root_url = "";
         private string __url = "";
         private string __start_datetime_elapsed;
         private string __file_location = "\\\\192.168.10.22\\ssi-reporting";
@@ -160,6 +160,11 @@ namespace CL_Cronos_Data
         public Main_Form()
         {
             InitializeComponent();
+
+            if (String.IsNullOrEmpty(__root_url))
+            {
+                __root_url = Properties.Settings.Default.______root_url.ToString();
+            }
 
             Opacity = 0;
             timer.Interval = 20;

@@ -20,5 +20,8 @@
     <Setting Name="______is_send_telegram" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="______root_url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">oei.uetuf.com</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
