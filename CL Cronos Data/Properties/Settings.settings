@@ -21,7 +21,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="______root_url" Type="System.String" Scope="User">
-      <Value Profile="(Default)">oei.uetuf.com</Value>
+      <Value Profile="(Default)">http://oei.uetuf.com</Value>
     </Setting>
   </Settings>
 </SettingsFile>

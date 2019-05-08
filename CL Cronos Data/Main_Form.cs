@@ -359,8 +359,8 @@ namespace CL_Cronos_Data
                     };
                 }));
             }
-            
-            if (e.Address.ToString().Equals(__root_url + "/"))
+
+            if (e.Address.ToString().Equals(__root_url + "/") || e.Address.ToString().Equals(__root_url))
             {
                 Invoke(new Action(async () =>
                 {

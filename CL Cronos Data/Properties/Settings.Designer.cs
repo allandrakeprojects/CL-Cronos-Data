@@ -97,7 +97,7 @@ namespace CL_Cronos_Data.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("oei.uetuf.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://oei.uetuf.com")]
         public string ______root_url {
             get {
                 return ((string)(this["______root_url"]));
