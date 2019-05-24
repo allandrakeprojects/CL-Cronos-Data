@@ -2881,96 +2881,6 @@ namespace CL_Cronos_Data
                         __send++;
                         if (__send == 5)
                         {
-                            __turnover_count++;
-                            if (__turnover_count <= 3)
-                            {
-                                if (__turnover_count != 3)
-                                {
-                                    SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)\nRetry after two hours.");
-                                }
-                                else
-                                {
-                                    SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)");
-                                }
-
-                                Properties.Settings.Default.______turnover = DateTime.Now.AddHours(2).ToString("yyyy-MM-dd HH");
-                                Properties.Settings.Default.Save();
-                                timer_turnover.Start();
-                            }
-                            else
-                            {
-                                __turnover_count = 0;
-                            }
-
-                            if (!__turnover_detect)
-                            {
-                                Properties.Settings.Default.______start_detect = "5";
-                                Properties.Settings.Default.Save();
-
-                                panel_status.Visible = false;
-                                label_cl_status.Text = "-";
-                                label_page_count.Text = "-";
-                                label_total_records.Text = "-";
-                                button_start.Visible = true;
-                                __index_reg = 1;
-                                if (__is_autostart)
-                                {
-                                    comboBox_list.SelectedIndex = 4;
-                                    button_start.PerformClick();
-                                }
-                                else
-                                {
-                                    panel_filter.Enabled = true;
-                                }
-
-                                __DATA.Clear();
-                                __detect_header = false;
-                                __send = 0;
-                            }
-                            else
-                            {
-                                __turnover_detect = false;
-                            }
-                        }
-                        else
-                        {
-                            ___WaitNSeconds(10);
-                            await ___TURNOVERAsync();
-                        }
-                    }
-                }
-
-            }
-            catch (Exception err)
-            {
-                if (__is_login)
-                {
-                    __send++;
-                    if (__send == 5)
-                    {
-                        __turnover_count++;
-                        if (__turnover_count <= 3)
-                        {
-                            if (__turnover_count != 3)
-                            {
-                                SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)\nRetry after two hours.");
-                            }
-                            else
-                            {
-                                SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)");
-                            }
-
-                            Properties.Settings.Default.______turnover = DateTime.Now.AddHours(2).ToString("yyyy-MM-dd HH");
-                            Properties.Settings.Default.Save();
-                            timer_turnover.Start();
-                        }
-                        else
-                        {
-                            __turnover_count = 0;
-                        }
-
-                        if (!__turnover_detect)
-                        {
                             Properties.Settings.Default.______start_detect = "5";
                             Properties.Settings.Default.Save();
 
@@ -2993,11 +2903,148 @@ namespace CL_Cronos_Data
                             __DATA.Clear();
                             __detect_header = false;
                             __send = 0;
+
+                            // detect here
+                            //__turnover_count++;
+                            //if (__turnover_count <= 3)
+                            //{
+                            //    if (__turnover_count != 3)
+                            //    {
+                            //        SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)\nRetry after two hours.");
+                            //    }
+                            //    else
+                            //    {
+                            //        SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)");
+                            //    }
+
+                            //    Properties.Settings.Default.______turnover = DateTime.Now.AddHours(2).ToString("yyyy-MM-dd HH");
+                            //    Properties.Settings.Default.Save();
+                            //    timer_turnover.Start();
+                            //}
+                            //else
+                            //{
+                            //    __turnover_count = 0;
+                            //}
+
+                            //if (!__turnover_detect)
+                            //{
+                            //    Properties.Settings.Default.______start_detect = "5";
+                            //    Properties.Settings.Default.Save();
+
+                            //    panel_status.Visible = false;
+                            //    label_cl_status.Text = "-";
+                            //    label_page_count.Text = "-";
+                            //    label_total_records.Text = "-";
+                            //    button_start.Visible = true;
+                            //    __index_reg = 1;
+                            //    if (__is_autostart)
+                            //    {
+                            //        comboBox_list.SelectedIndex = 4;
+                            //        button_start.PerformClick();
+                            //    }
+                            //    else
+                            //    {
+                            //        panel_filter.Enabled = true;
+                            //    }
+
+                            //    __DATA.Clear();
+                            //    __detect_header = false;
+                            //    __send = 0;
+                            //}
+                            //else
+                            //{
+                            //    __turnover_detect = false;
+                            //}
                         }
                         else
                         {
-                            __turnover_detect = false;
+                            ___WaitNSeconds(10);
+                            await ___TURNOVERAsync();
                         }
+                    }
+                }
+
+            }
+            catch (Exception err)
+            {
+                if (__is_login)
+                {
+                    __send++;
+                    if (__send == 5)
+                    {
+                        Properties.Settings.Default.______start_detect = "5";
+                        Properties.Settings.Default.Save();
+
+                        panel_status.Visible = false;
+                        label_cl_status.Text = "-";
+                        label_page_count.Text = "-";
+                        label_total_records.Text = "-";
+                        button_start.Visible = true;
+                        __index_reg = 1;
+                        if (__is_autostart)
+                        {
+                            comboBox_list.SelectedIndex = 4;
+                            button_start.PerformClick();
+                        }
+                        else
+                        {
+                            panel_filter.Enabled = true;
+                        }
+
+                        __DATA.Clear();
+                        __detect_header = false;
+                        __send = 0;
+
+                        //__turnover_count++;
+                        //if (__turnover_count <= 3)
+                        //{
+                        //    if (__turnover_count != 3)
+                        //    {
+                        //        SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)\nRetry after two hours.");
+                        //    }
+                        //    else
+                        //    {
+                        //        SendReportsTeam("Can't download Turnover Record at this moment.\n(Retry " + __turnover_count + " of 3)");
+                        //    }
+
+                        //    Properties.Settings.Default.______turnover = DateTime.Now.AddHours(2).ToString("yyyy-MM-dd HH");
+                        //    Properties.Settings.Default.Save();
+                        //    timer_turnover.Start();
+                        //}
+                        //else
+                        //{
+                        //    __turnover_count = 0;
+                        //}
+
+                        //if (!__turnover_detect)
+                        //{
+                        //    Properties.Settings.Default.______start_detect = "5";
+                        //    Properties.Settings.Default.Save();
+
+                        //    panel_status.Visible = false;
+                        //    label_cl_status.Text = "-";
+                        //    label_page_count.Text = "-";
+                        //    label_total_records.Text = "-";
+                        //    button_start.Visible = true;
+                        //    __index_reg = 1;
+                        //    if (__is_autostart)
+                        //    {
+                        //        comboBox_list.SelectedIndex = 4;
+                        //        button_start.PerformClick();
+                        //    }
+                        //    else
+                        //    {
+                        //        panel_filter.Enabled = true;
+                        //    }
+
+                        //    __DATA.Clear();
+                        //    __detect_header = false;
+                        //    __send = 0;
+                        //}
+                        //else
+                        //{
+                        //    __turnover_detect = false;
+                        //}
                     }
                     else
                     {
