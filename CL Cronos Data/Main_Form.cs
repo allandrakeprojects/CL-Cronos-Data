@@ -2881,6 +2881,8 @@ namespace CL_Cronos_Data
                         __send++;
                         if (__send == 5)
                         {
+                            SendReportsTeam("Can't download Turnover Record at this moment.");
+                            
                             Properties.Settings.Default.______start_detect = "5";
                             Properties.Settings.Default.Save();
 
@@ -2963,7 +2965,6 @@ namespace CL_Cronos_Data
                         }
                     }
                 }
-
             }
             catch (Exception err)
             {
@@ -2972,6 +2973,8 @@ namespace CL_Cronos_Data
                     __send++;
                     if (__send == 5)
                     {
+                        SendReportsTeam("Can't download Turnover Record at this moment.");
+                        
                         Properties.Settings.Default.______start_detect = "5";
                         Properties.Settings.Default.Save();
 
@@ -2995,6 +2998,7 @@ namespace CL_Cronos_Data
                         __detect_header = false;
                         __send = 0;
 
+                        // detect here
                         //__turnover_count++;
                         //if (__turnover_count <= 3)
                         //{
